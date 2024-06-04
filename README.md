@@ -5,10 +5,9 @@ Welcome to the **HTML-Projects** repository! This repository contains a collecti
 
 1. [Introduction](#introduction)
 2. [Projects](#projects)
-3. [Tools](#tools)
-4. [How to Use](#how-to-use)
-5. [Contributing](#contributing)
-6. [License](#license)
+3. [How to Use](#how-to-use)
+4. [Contributing](#contributing)
+5. [License](#license)
 
 ## Introduction
 
@@ -29,19 +28,6 @@ Here are some of the key projects included in this repository:
 3. **Project 3: Blog Template**
    - A clean and minimalistic blog template.
    - Showcases best practices in structuring HTML for content-heavy sites.
-
-## Tools
-
-The repository also includes several useful tools and snippets to enhance your development process:
-
-1. **HTML Boilerplate**
-   - A basic HTML template to kickstart your projects.
-
-2. **Form Validation Snippets**
-   - Ready-to-use HTML and JavaScript snippets for form validation.
-
-3. **Responsive Design Utilities**
-   - Media query examples and CSS utilities for responsive design.
 
 ## How to Use
 
