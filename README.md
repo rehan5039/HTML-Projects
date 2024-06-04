@@ -47,7 +47,7 @@ The repository also includes several useful tools and snippets to enhance your d
 
 1. **Clone the Repository**
    ```bash
-   git clone https://github.com/your-username/HTML-Projects.git
+   git clone https://github.com/rehan5039/HTML-Projects.git
    ```
 2. **Navigate to the Project Directory**
    ```bash
