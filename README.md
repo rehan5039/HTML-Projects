@@ -15,7 +15,7 @@ This repository contains a collection of projects built with HTML, demonstrating
 
 ## Projects
 
-Here are some of the key projects included in this repository:
+Here are some projects:
 
 1. **Project 1: Portfolio Website**
    - A fully responsive portfolio website template.
