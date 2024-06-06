@@ -20,14 +20,20 @@ Here are some projects:
 1. **Project 1: Emoji Decode**
    - This Emoji Decoder tool uses HTML and JavaScript to identify the meanings of emojis. Simply input an emoji and click the "Find Meaning" button to see its definition.
 
-2. **Project 2: Landing Page**
-   - A modern landing page design.
-   - Utilizes HTML5, CSS3, and simple JavaScript for interactivity.
+1. **[Emoji Decode](Emoji Decode/index.html)**
+   - A basic HTML template to kickstart your projects.
 
-3. **Project 3: Blog Template**
-   - A clean and minimalistic blog template.
-   - Showcases best practices in structuring HTML for content-heavy sites.
+2. **[Form Validation Snippets](tools/form-validation-snippets)**
+   - Ready-to-use HTML and JavaScript snippets for form validation.
 
+3. **[Responsive Design Utilities](tools/responsive-design-utilities)**
+   - Media query examples and CSS utilities for responsive design.
+
+4. **[Sample Tool One](tools/sample-tool-one)**
+   - Description for Sample Tool One.
+
+5. **[Sample Tool Two](tools/sample-tool-two)**
+   - Description for Sample Tool Two.
 ## How to Use
 
 1. **Clone the Repository**
