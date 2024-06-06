@@ -20,7 +20,7 @@ Here are some projects:
 1. **Project 1: Emoji Decode**
    - This Emoji Decoder tool uses HTML and JavaScript to identify the meanings of emojis. Simply input an emoji and click the "Find Meaning" button to see its definition.
 
-1. **[Emoji Decode](Emoji Decode/index.html)**
+1. **[Emoji Decode](Emoji%Decode/index.html)**
    - A basic HTML template to kickstart your projects.
 
 2. **[Form Validation Snippets](tools/form-validation-snippets)**
