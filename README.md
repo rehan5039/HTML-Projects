@@ -17,9 +17,8 @@ This repository contains a collection of projects built with HTML, demonstrating
 
 Here are some projects:
 
-1. **Project 1: Portfolio Website**
-   - A fully responsive portfolio website template.
-   - Demonstrates the use of semantic HTML, CSS Flexbox, and Grid.
+1. **Project 1: Emoji Decode**
+   - This Emoji Decoder tool uses HTML and JavaScript to identify the meanings of emojis. Simply input an emoji and click the "Find Meaning" button to see its definition.
 
 2. **Project 2: Landing Page**
    - A modern landing page design.
