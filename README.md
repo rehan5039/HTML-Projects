@@ -20,8 +20,8 @@ Here are some projects:
 1. **[Emoji Decode](Emoji%20Decode/)**
    - This Emoji Decoder tool uses HTML and JavaScript to identify the meanings of emojis. Simply input an emoji and click the "Find Meaning" button to see its definition.
 
-2. **[Form Validation Snippets](tools/form-validation-snippets)**
-   - Ready-to-use HTML and JavaScript snippets for form validation.
+2. **[Infinite Table](Infinite%20Table/)**
+   - This tool where scrolling generates an infinite number of math tables.
 
 3. **[Responsive Design Utilities](tools/responsive-design-utilities)**
    - Media query examples and CSS utilities for responsive design.
