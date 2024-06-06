@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Emoji Meaning Finder</title>
+<!-- Add custom fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+<style>
+    body {
+        font-family: 'Poppins', sans-serif; /* Use custom font */
+        text-align: center;
+        background-color: #f7f7f7;
+        padding-top: 50px;
+    }
+    input {
+        padding: 10px;
+        font-size: 16px;
+        border: 2px solid #ccc;
+        border-radius: 5px;
+        transition: border-color 0.3s ease;
+    }
+    input:focus {
+        border-color: #00bcd4;
+        /* Add subtle animation on focus */
+        transform: scale(1.02);
+    }
+    button {
+        padding: 10px 20px;
+        font-size: 16px;
+        cursor: pointer;
+        background-color: #00bcd4;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        transition: background-color 0.3s ease, transform 0.3s ease; /* Add transition for transform */
+        margin-top: 10px; 
+    }
+    button:hover {
+        background-color: #0097a7;
+        /* Add subtle animation on hover */
+        transform: scale(1.05);
+    }
+    p {
+        font-size: 18px;
+        margin-top: 20px;
+        color: #333;
+        /* Add fade-in/fade-out animation */
+        animation: fade 0.5s ease-in-out;
+    }
+    @keyframes fade {
+        from {
+            opacity: 0;
+        }
+        to {
+            opacity: 1;
+        }
+    }
+    h1 {
+        color: #00bcd4;
+        font-size: 36px;
+        margin-bottom: 30px;
+    }
+    /* Add tooltip */
+    .tooltip {
+        position: relative;
+        display: inline-block;
+        cursor: pointer;
+    }
+    .tooltip .tooltiptext {
+        visibility: hidden;
+        width: 120px;
+        background-color: #333;
+        color: #fff;
+        text-align: center;
+        border-radius: 6px;
+        padding: 5px;
+        position: absolute;
+        z-index: 1;
+        bottom: 125%;
+        left: 50%;
+        margin-left: -60px;
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
+    .tooltip:hover .tooltiptext {
+        visibility: visible;
+        opacity: 1;
+    }
+    /* Add modal styles */
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0,0,0,0.4);
+    }
+    .modal-content {
+        background-color: #fefefe;
+        margin: 15% auto;
+        padding: 20px;
+        border-radius: 10px;
+        width: 80%;
+    }
+    .close {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+    }
+    .close:hover,
+    .close:focus {
+        color: black;
+        text-decoration: none;
+        cursor: pointer;
+    }
+    /* Three-dot button styles */
+    .three-dot {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        background-color: transparent;
+        border: none;
+        cursor: pointer;
+    }
+    .three-dot div {
+        width: 3px; /* Reduced size */
+        height: 3px; /* Reduced size */
+        background-color: #333;
+        border-radius: 50%;
+        margin: 4px 0; /* Adjusted spacing */
+        transition: background-color 0.3s ease;
+    }
+    .three-dot:hover div {
+        background-color: #555;
+    }
+    /* Adjusted styles for result paragraph */
+    #emojiMeaning {
+        font-size: 24px; /* Increase font size */
+        margin-top: 40px; /* Adjust margin top */
+        color: #00bcd4; /* Default color */
+    }
+    /* Styles for emoji list */
+    #emojiList {
+        display: block; /* Initially show the list */
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: #fff;
+        border: 2px solid #ccc;
+        border-radius: 5px;
+        padding: 10px;
+        width: 80%; /* Adjusted width */
+        max-height: 120px;
+        overflow-y: auto;
+    }
+    .button-container {
+        margin-top: 10px;
+        display: flex;
+        justify-content: center;
+    }
+    .button-container button {
+        margin: 0 5px;
+    }
+</style>
+</head>
+<body>
+    <h1>Welcome to Emoji Meaning Finder</h1>
+    <div class="tooltip">
+        <!-- Add tooltip for emoji input -->
+        <input type="text" id="emojiInput" placeholder="Enter an emoji" title="Enter an emoji">
+        <span class="tooltiptext">Enter an emoji</span>
+    </div>
+    <br> 
+    <button onclick="findMeaning()">Find Meaning</button>
+    <p id="emojiMeaning"></p>
+
+    <!-- Three-dot button -->
+    <button id="historyButton" class="three-dot" onclick="toggleModal()">
+        <div></div>
+        <div></div>
+        <div></div>
+    </button>
+
+    <div id="historyModal" class="modal">
+        <!-- Modal content -->
+        <div class="modal-content">
+            <span class="close" onclick="toggleModal()">&times;</span>
+            <h2>Emoji Search History</h2>
+            <p id="emojiHistory"></p>
+            <button onclick="toggleModal()">Back to Home</button>
+            <!-- Buttons container for "Go to Index 1" and "Go to Index 2" -->
+            <div class="button-container">
+                <button onclick="goToIndex1()">😀</button>
+                <button onclick="goToIndex2()">😎</button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Emoji list -->
+    <div id="emojiList"></div>
+
+    <script src="emoji.js"></script>
+
+    <script>
+// Array to store emoji search history
+var emojiHistory = [];
+// Variable to store last emoji search
+var lastSearch = "";
+
+// Function to handle opening and closing modal
+function toggleModal() {
+    var modal = document.getElementById('historyModal');
+    modal.style.display = modal.style.display === "block" ? "none" : "block";
+    if (modal.style.display === "block") {
+        updateHistory(); // Update history when modal opens
+    }
+}
+
+// Function to update history when modal opens
+function updateHistory() {
+    var emojiHistoryText = "Emoji Search History:\n";
+    var storedHistory = localStorage.getItem("emojiHistory");
+    if (storedHistory) {
+        emojiHistory = JSON.parse(storedHistory); // Restore history from local storage
+    }
+    if (emojiHistory.length > 0) {
+        emojiHistoryText += emojiHistory.join(', '); // Join history array elements with comma
+    } else {
+        emojiHistoryText += "No history available";
+    }
+    document.getElementById('emojiHistory').textContent = emojiHistoryText; // Display history in modal
+}
+
+
+// Function to find meaning of emoji or matching emojis
+function findMeaning() {
+    var userInput = document.getElementById('emojiInput').value.trim(); // Trim whitespace
+    var emojiMeaning = document.getElementById('emojiMeaning');
+
+    // Check if the input is empty
+    if (userInput === "") {
+        emojiMeaning.textContent = "Please enter an emoji or text to search.";
+        emojiMeaning.style.color = "red"; // Change color for no input
+        return; // Exit the function if input is empty
+    }
+
+    // Check if the input is an emoji
+    if (isEmoji(userInput)) {
+        handleEmojiSearch(userInput);
+    } else {
+        handleTextSearch(userInput);
+    }
+}
+
+// Function to handle emoji search
+function handleEmojiSearch(emoji) {
+    var emojiMeaning = document.getElementById('emojiMeaning');
+    if (emojiDictionary[emoji]) {
+        emojiMeaning.textContent = "The meaning of '" + emoji + "' is: " + emojiDictionary[emoji];
+        emojiMeaning.style.color = "#00bcd4"; // Change color for successful meaning found
+        emojiMeaning.style.fontWeight = "bold"; // Make the result bold
+        emojiMeaning.style.fontSize = "20px"; // Increase font size for better visibility
+        emojiMeaning.style.marginTop = "30px"; // Adjust margin top for spacing
+        addToHistory(emoji); // Add emoji to history array
+    } else {
+        emojiMeaning.textContent = "Sorry, the meaning of '" + emoji + "' is not available.";
+        emojiMeaning.style.color = "red"; // Change color for unsuccessful meaning
+    }
+}
+
+// Function to handle text search
+function handleTextSearch(text) {
+    var emojiMeaning = document.getElementById('emojiMeaning');
+    var matchedEmojis = [];
+    var matched = false;
+    for (var emoji in emojiDictionary) {
+        if (emojiDictionary[emoji].toLowerCase().includes(text.toLowerCase())) {
+            matchedEmojis.push(emoji + " - " + emojiDictionary[emoji]);
+            matched = true;
+        }
+    }
+    if (matched) {
+        emojiMeaning.textContent = "Matching emojis for '" + text + "':\n" + matchedEmojis.join('\n');
+        emojiMeaning.style.color = "#00bcd4"; // Change color for successful match
+        emojiMeaning.style.fontWeight = "normal"; // Reset font weight
+        emojiMeaning.style.fontSize = "16px"; // Reset font size
+        emojiMeaning.style.marginTop = "20px"; // Reset margin top
+    } else {
+        emojiMeaning.textContent = "No matching emojis found for '" + text + "'.";
+        emojiMeaning.style.color = "red"; // Change color for no match found
+    }
+    addToHistory(text); // Add text to history array regardless of search result
+}
+
+// Function to add to search history
+function addToHistory(input) {
+    emojiHistory.push(input); // Add input to history array
+    lastSearch = input; // Store last search
+    localStorage.setItem("emojiHistory", JSON.stringify(emojiHistory)); // Save history to local storage
+    updateHistory(); // Update history display
+}
+
+// Function to check if a string contains emoji characters
+function isEmoji(input) {
+    var emojiPattern = /[\uD800-\uDBFF][\uDC00-\uDFFF]/;
+    return emojiPattern.test(input);
+}
+
+// Function to update emoji list
+function updateEmojiList() {
+    var emojiList = document.getElementById('emojiList');
+    emojiList.innerHTML = ""; // Clear previous list
+
+    // Create list items for each emoji
+    var count = 0; // Keep track of displayed emojis
+    for (var emoji in emojiDictionary) {
+        if (count < 15000) {
+            var listItem = document.createElement('p');
+            listItem.textContent = emoji + " - " + emojiDictionary[emoji];
+            emojiList.appendChild(listItem);
+            count++;
+        } else {
+            break;
+        }
+    }
+}
+
+// Function to restore last search when modal is reopened
+function restoreLastSearch() {
+    if (lastSearch) {
+        document.getElementById('emojiInput').value = lastSearch; // Set input value to last search
+    }
+}
+
+// Restore last search and update history and emoji list when page is loaded
+window.onload = function() {
+    restoreLastSearch();
+    updateHistory();
+    updateEmojiList();
+};
+
+// Adjust emoji list visibility based on keyboard visibility
+window.addEventListener('resize', function() {
+    var emojiList = document.getElementById('emojiList');
+    var emojiInput = document.getElementById('emojiInput');
+    var keyboardHeight = window.innerHeight - window.visualViewport.height;
+
+    if (keyboardHeight > 0) {
+        emojiList.style.display = 'block'; // Show the list when the keyboard is open
+    } else {
+        emojiList.style.display = 'none'; // Hide the list when the keyboard is closed
+    }
+});
+
+    // Function to handle going to index1.html
+    function goToIndex1() {
+        window.location.href = "😄.html";
+    }
+
+    // Function to handle going to index2.html
+    function goToIndex2() {
+        window.location.href = "index2.html";
+    }
+    </script>
+</body>
+</html>
