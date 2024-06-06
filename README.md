@@ -17,7 +17,7 @@ This repository contains a collection of projects built with HTML, demonstrating
 
 Here are some projects:
 
-1. **[Emoji Decode](Emoji Decode/)**
+1. **[Emoji Decode](Emoji%Decode/index.html)**
    - This Emoji Decoder tool uses HTML and JavaScript to identify the meanings of emojis. Simply input an emoji and click the "Find Meaning" button to see its definition.
 
 2. **[Form Validation Snippets](tools/form-validation-snippets)**
