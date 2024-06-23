@@ -23,7 +23,7 @@ Here are some projects:
 2. **[Infinite Table](Infinite%20Table/)**
    - This tool where scrolling generates an infinite number of math tables.
 
-3. **[Responsive Design Utilities](tools/responsive-design-utilities)**
+3. **[Quiz Time!](Quiz%20Time/)**
    - Media query examples and CSS utilities for responsive design.
 
 4. **[Sample Tool One](tools/sample-tool-one)**
