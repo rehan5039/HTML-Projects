@@ -1,0 +1,30 @@
+body {
+    font-family: Arial, sans-serif;
+    padding: 20px;
+}
+
+#login-page, #course-page, #admin-page {
+    max-width: 600px;
+    margin: auto;
+}
+
+h2 {
+    text-align: center;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+label, input, button {
+    margin-bottom: 10px;
+}
+
+#user-list div {
+    margin-bottom: 20px;
+}
+
+button {
+    margin-left: 10px;
+}
