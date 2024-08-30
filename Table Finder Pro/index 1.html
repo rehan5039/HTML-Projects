@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Table Finder Pro</title>
+    <style>
+        /* Reset some default browser styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f6f9;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .app-container {
+            background-color: #ffffff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 24px;
+            color: #333333;
+            margin-bottom: 10px;
+        }
+
+        p {
+            font-size: 16px;
+            color: #555555;
+            margin-bottom: 20px;
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            margin: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .input-container {
+            margin-top: 20px;
+        }
+
+        .input-container input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #cccccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .output {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #333333;
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            white-space: pre-line;
+        }
+
+        .submit-button {
+            background-color: #28a745;
+        }
+
+        .submit-button:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <h1>Table Finder Pro</h1>
+        <p>Select a number of inputs, enter values, and find the common multiplication table.</p>
+
+        <!-- Buttons -->
+        <button onclick="generateInputBoxes(1)">1</button>
+        <button onclick="generateInputBoxes(2)">2</button>
+        <button onclick="generateInputBoxes(3)">3</button>
+        <button onclick="generateInputBoxes(4)">4</button>
+
+        <!-- Input Area -->
+        <div class="input-container" id="input-container"></div>
+
+        <!-- Output Area -->
+        <div class="output" id="output"></div>
+    </div>
+
+    <script>
+        function generateInputBoxes(num) {
+            // Clear previous input fields and output
+            document.getElementById("input-container").innerHTML = "";
+            document.getElementById("output").innerHTML = "";
+
+            // Create input fields based on the button clicked
+            for (let i = 0; i < num; i++) {
+                let input = document.createElement("input");
+                input.type = "number";
+                input.placeholder = `Enter number ${i + 1}`;
+                input.id = `input${i + 1}`;
+                document.getElementById("input-container").appendChild(input);
+            }
+
+            // Create a submit button
+            let submitButton = document.createElement("button");
+            submitButton.innerText = "Submit";
+            submitButton.classList.add("submit-button");
+            submitButton.onclick = showCommonTable;
+            document.getElementById("input-container").appendChild(submitButton);
+        }
+
+        function showCommonTable() {
+            let inputs = document.querySelectorAll(".input-container input");
+            let values = Array.from(inputs).map(input => parseInt(input.value)).filter(value => !isNaN(value));
+            
+            if (values.length === 0) return;
+
+            let commonTables = [];
+            let outputText = "";
+
+            // Check tables from 1 to 10
+            for (let table = 2; table <= 10; table++) {
+                let isCommon = values.every(value => isInTable(value, table));
+                if (isCommon) {
+                    commonTables.push(table);
+                    outputText += `Table ${table}:\n`;
+                    values.forEach(value => {
+                        outputText += `${table} × ${value / table} = ${value}\n`;
+                    });
+                    outputText += "\n";
+                }
+            }
+
+            if (commonTables.length === 0) {
+                outputText = "No common multiplication table found for the entered values.";
+            }
+
+            document.getElementById("output").innerText = outputText;
+        }
+
+        function isInTable(value, table) {
+            for (let i = 1; i <= 10; i++) {
+                if (table * i === value) {
+                    return true;
+                }
+            }
+            return false;
+        }
+    </script>
+</body>
+</html>
