@@ -23,7 +23,7 @@ Here are some projects:
 2. **[Infinite Table](Infinite%20Table/)**
    - This tool where scrolling generates an infinite number of math tables.
 
-3. **[Quiz Time!](Quiz%20Time/)**
+3. **[Quiz Time!](Table%20Finder%20Pro/)**
    - This tool, Table Finder Pro, is designed to help users quickly find common multiplication tables for multiple numbers. By entering values, the tool identifies and displays the shared table where those numbers appear, making it ideal for educational purposes or quick reference.
 
 4. **[Sample Tool One](tools/sample-tool-one)**
