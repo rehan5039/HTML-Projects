@@ -27,7 +27,7 @@ Here are some projects:
    - This tool, Table Finder Pro, is designed to help users quickly find common multiplication tables for multiple numbers. By entering values, the tool identifies and displays the shared table where those numbers appear, making it ideal for educational purposes or quick reference.
 
 4. **[Chat Assistant](Chat%20Assistant/)**
-   - Description for Sample Tool One.
+   - A responsive web-based chat assistant app with real-time AI interaction, image generation, and a clean Material Design layout.
 
 5. **[Sample Tool Two](tools/sample-tool-two)**
    - Description for Sample Tool Two.
