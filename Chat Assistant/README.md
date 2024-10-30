@@ -1,4 +1,4 @@
-**# Chat Assistant**
+### Chat Assistant
 
 _A lightweight, web-based chat assistant app for real-time interaction with an AI assistant, with image generation and a modern, responsive design._
 
