@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gmail Alias Master - Generate Multiple Gmail Aliases</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons+Round">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Gradient Background -->
+    <div class="gradient-bg"></div>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Header Section -->
+        <header class="header">
+            <div class="logo">
+                <span class="material-icons-round">alternate_email</span>
+                <h1>Gmail Alias Master</h1>
+            </div>
+            <p class="subtitle">Generate unlimited Gmail aliases with one click</p>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Input Section -->
+            <section class="input-section glass-card">
+                <div class="input-wrapper">
+                    <span class="material-icons-round input-icon">mail</span>
+                    <input type="email" id="emailInput" placeholder="Enter your Gmail address" autocomplete="email">
+                </div>
+                <div class="error-message" id="emailError"></div>
+                <button id="generateButton" class="generate-button">
+                    <span class="button-text">Generate Aliases</span>
+                    <div class="button-loader"></div>
+                </button>
+            </section>
+
+            <!-- Options Section -->
+            <section class="options-section glass-card">
+                <div class="section-header">
+                    <span class="material-icons-round">tune</span>
+                    <h2>Generation Options</h2>
+                </div>
+                <div class="options-grid">
+                    <label class="option-item">
+                        <input type="checkbox" id="dotVariations" checked>
+                        <span class="checkbox-custom">
+                            <span class="material-icons-round">check</span>
+                        </span>
+                        <span class="option-text">Dot Variations</span>
+                    </label>
+                    <label class="option-item">
+                        <input type="checkbox" id="prefixVariations" checked>
+                        <span class="checkbox-custom">
+                            <span class="material-icons-round">check</span>
+                        </span>
+                        <span class="option-text">Prefix Variations</span>
+                    </label>
+                    <label class="option-item">
+                        <input type="checkbox" id="suffixVariations" checked>
+                        <span class="checkbox-custom">
+                            <span class="material-icons-round">check</span>
+                        </span>
+                        <span class="option-text">Suffix Variations</span>
+                    </label>
+                    <label class="option-item">
+                        <input type="checkbox" id="yearVariations" checked>
+                        <span class="checkbox-custom">
+                            <span class="material-icons-round">check</span>
+                        </span>
+                        <span class="option-text">Year Variations</span>
+                    </label>
+                </div>
+                <div class="slider-container">
+                    <label for="maxVariations">Maximum Variations: <span id="maxVariationsValue">100</span></label>
+                    <input type="range" id="maxVariations" min="10" max="500" value="100" step="10">
+                </div>
+            </section>
+
+            <!-- Results Section -->
+            <section class="results-section glass-card" id="resultsSection" style="display: none;">
+                <div class="section-header">
+                    <span class="material-icons-round">format_list_bulleted</span>
+                    <h2>Generated Aliases</h2>
+                    <div class="actions">
+                        <button id="copyAllButton" class="action-button">
+                            <span class="material-icons-round">content_copy</span>
+                            Copy All
+                        </button>
+                        <button id="downloadButton" class="action-button">
+                            <span class="material-icons-round">download</span>
+                            Download
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Stats Grid -->
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-value" id="totalAliases">0</div>
+                        <div class="stat-label">Total Aliases</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="dotCount">0</div>
+                        <div class="stat-label">Dot Variations</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="prefixCount">0</div>
+                        <div class="stat-label">Prefix Variations</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="suffixCount">0</div>
+                        <div class="stat-label">Suffix Variations</div>
+                    </div>
+                </div>
+
+                <!-- Email List -->
+                <div class="email-list" id="emailList"></div>
+
+                <!-- Loading Indicator -->
+                <div class="loading-indicator" id="loadingIndicator">
+                    <div class="loader"></div>
+                    <span>Generating aliases...</span>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast">
+        <span class="material-icons-round toast-icon">check_circle</span>
+        <span class="toast-message"></span>
+    </div>
+
+    <script src="js/app.js"></script>
+</body>
+</html>
