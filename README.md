@@ -29,7 +29,7 @@ Here are some projects:
 4. **[Chat Assistant](Chat%20Assistant/)**
    - A responsive web-based chat assistant app with real-time AI interaction, image generation, and a clean Material Design layout.
 
-5. **[Gmail Alias](tools/sample-tool-two)**
+5. **[Gmail Alias](Gmail%20Alias/)**
    - Description for Sample Tool Two.
 ## How to Use
 
