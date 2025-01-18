@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gmail Alias Master - Generate Multiple Gmail Aliases</title>
+    <link rel="icon" type="image/jpg" href="css/logos.jpg">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons+Round">
     <link rel="stylesheet" href="css/style.css">
@@ -17,10 +18,59 @@
         <!-- Header Section -->
         <header class="header">
             <div class="logo">
-                <span class="material-icons-round">alternate_email</span>
+                <button id="userManualButton" class="email-icon-button" title="Click for Help">
+                    <span class="material-icons-round">alternate_email</span>
+                </button>
                 <h1>Gmail Alias Master</h1>
+                <button id="settingsButton" class="settings-button" title="Settings">
+                    <span class="material-icons-round">settings</span>
+                </button>
             </div>
-            <p class="subtitle">Generate unlimited Gmail aliases with one click</p>
+            <p class="tagline">Generate unlimited Gmail aliases with one click</p>
+            <div id="settingsMenu" class="settings-menu">
+                <div class="settings-header">
+                    <h3>Settings</h3>
+                    <button id="closeSettings" class="close-button">
+                        <span class="material-icons-round">close</span>
+                    </button>
+                </div>
+                <div class="settings-content">
+                    <div class="settings-section">
+                        <h4>Appearance</h4>
+                        <div class="settings-options">
+                            <button id="themeToggle" class="settings-option">
+                                <span class="material-icons-round theme-icon">dark_mode</span>
+                                <span class="option-text">Dark Mode</span>
+                            </button>
+                            <button id="viewToggle" class="settings-option">
+                                <span class="material-icons-round">view_compact</span>
+                                <span>Compact View</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="settings-section">
+                        <h4>Color Scheme</h4>
+                        <div class="color-scheme-options">
+                            <button class="scheme-option" data-scheme="default">
+                                <span class="scheme-color default"></span>
+                                <span>Default</span>
+                            </button>
+                            <button class="scheme-option" data-scheme="ocean">
+                                <span class="scheme-color ocean"></span>
+                                <span>Ocean</span>
+                            </button>
+                            <button class="scheme-option" data-scheme="forest">
+                                <span class="scheme-color forest"></span>
+                                <span>Forest</span>
+                            </button>
+                            <button class="scheme-option" data-scheme="sunset">
+                                <span class="scheme-color sunset"></span>
+                                <span>Sunset</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </header>
 
         <!-- Main Content -->
@@ -32,8 +82,11 @@
                     <input type="email" id="emailInput" placeholder="Enter your Gmail address" autocomplete="email">
                 </div>
                 <div class="error-message" id="emailError"></div>
-                <button id="generateButton" class="generate-button">
-                    <span class="button-text">Generate Aliases</span>
+                <button class="generate-button" id="generateButton">
+                    <span class="button-text">
+                        <span class="material-icons-round button-icon">auto_awesome</span>
+                        Generate Aliases
+                    </span>
                     <div class="button-loader"></div>
                 </button>
             </section>
@@ -44,30 +97,34 @@
                     <span class="material-icons-round">tune</span>
                     <h2>Generation Options</h2>
                 </div>
+                <div class="info-message">
+                    <span class="material-icons-round">info</span>
+                    <p>All generated aliases use Gmail's dot (.) format to ensure reliable email forwarding</p>
+                </div>
                 <div class="options-grid">
-                    <label class="option-item">
+                    <label class="option-item" for="dotVariations">
                         <input type="checkbox" id="dotVariations" checked>
                         <span class="checkbox-custom">
                             <span class="material-icons-round">check</span>
                         </span>
                         <span class="option-text">Dot Variations</span>
                     </label>
-                    <label class="option-item">
-                        <input type="checkbox" id="prefixVariations" checked>
+                    <label class="option-item" for="prefixVariations">
+                        <input type="checkbox" id="prefixVariations">
                         <span class="checkbox-custom">
                             <span class="material-icons-round">check</span>
                         </span>
                         <span class="option-text">Prefix Variations</span>
                     </label>
-                    <label class="option-item">
-                        <input type="checkbox" id="suffixVariations" checked>
+                    <label class="option-item" for="suffixVariations">
+                        <input type="checkbox" id="suffixVariations">
                         <span class="checkbox-custom">
                             <span class="material-icons-round">check</span>
                         </span>
                         <span class="option-text">Suffix Variations</span>
                     </label>
-                    <label class="option-item">
-                        <input type="checkbox" id="yearVariations" checked>
+                    <label class="option-item" for="yearVariations">
+                        <input type="checkbox" id="yearVariations">
                         <span class="checkbox-custom">
                             <span class="material-icons-round">check</span>
                         </span>
@@ -76,7 +133,7 @@
                 </div>
                 <div class="slider-container">
                     <label for="maxVariations">Maximum Variations: <span id="maxVariationsValue">100</span></label>
-                    <input type="range" id="maxVariations" min="10" max="500" value="100" step="10">
+                    <input type="range" id="maxVariations" min="10" max="1000" value="100" step="10">
                 </div>
             </section>
 
@@ -118,7 +175,18 @@
                 </div>
 
                 <!-- Email List -->
-                <div class="email-list" id="emailList"></div>
+                <div class="email-list" id="emailList">
+                    <!-- Email items will be dynamically added here with this structure:
+                    <div class="email-card">
+                        <div class="email-content">
+                            <span class="email-text"></span>
+                            <button class="copy-button" title="Copy to clipboard">
+                                <span class="material-icons-round">content_copy</span>
+                            </button>
+                        </div>
+                    </div>
+                    -->
+                </div>
 
                 <!-- Loading Indicator -->
                 <div class="loading-indicator" id="loadingIndicator">
@@ -127,6 +195,64 @@
                 </div>
             </section>
         </main>
+    </div>
+
+    <!-- User Manual Modal -->
+    <div id="userManualModal" class="modal">
+        <div class="modal-content glass-card">
+            <div class="modal-header">
+                <h2>User Manual - Gmail Alias Master</h2>
+                <button id="closeManual" class="close-button">
+                    <span class="material-icons-round">close</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <section class="manual-section">
+                    <h3>What is Gmail Alias Generator?</h3>
+                    <p>Gmail Alias Generator is a tool that helps you create multiple email aliases from your Gmail address. These aliases can be used to organize your inbox, sign up for services, or maintain privacy.</p>
+                </section>
+                
+                <section class="manual-section">
+                    <h3>How to Use:</h3>
+                    <ol>
+                        <li>Enter your Gmail address in the input field</li>
+                        <li>Click the "Generate Aliases" button</li>
+                        <li>View your generated aliases in the results section</li>
+                        <li>Use the copy button to copy individual aliases</li>
+                        <li>Use "Copy All" to copy all aliases at once</li>
+                    </ol>
+                </section>
+
+                <section class="manual-section">
+                    <h3>Benefits:</h3>
+                    <ul>
+                        <li>Organize emails by using different aliases for different purposes</li>
+                        <li>Protect your privacy by using aliases for online signups</li>
+                        <li>Track which services are sharing your email address</li>
+                        <li>Filter and manage emails based on which alias they were sent to</li>
+                    </ul>
+                </section>
+
+                <section class="manual-section">
+                    <h3>Features:</h3>
+                    <ul>
+                        <li>Dark/Light mode toggle for comfortable viewing</li>
+                        <li>Compact view option for better space utilization</li>
+                        <li>Multiple color schemes to personalize your experience</li>
+                        <li>Copy functionality for easy alias usage</li>
+                    </ul>
+                </section>
+
+                <section class="manual-section">
+                    <h3>Important Notes:</h3>
+                    <ul>
+                        <li>All aliases will deliver emails to your main Gmail inbox</li>
+                        <li>Aliases are created using the Gmail plus addressing feature</li>
+                        <li>Some websites might not accept plus addresses</li>
+                    </ul>
+                </section>
+            </div>
+        </div>
     </div>
 
     <!-- Toast -->
