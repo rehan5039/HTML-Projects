@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emoji Sequence Game</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            text-align: center;
+            background-color: #fff3e0;
+            padding-top: 60px;
+            margin: 0;
+            min-height: 100vh;
+            background-image: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+        }
+        
+        h1 {
+            color: #ff9800;
+            font-size: 36px;
+            margin-bottom: 20px;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .game-container {
+            width: 90%;
+            max-width: 600px;
+            margin: 0 auto 40px auto;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            padding: 25px;
+            position: relative;
+        }
+        
+        .sequence-area {
+            background-color: #f9f9f9;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.1);
+            min-height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        
+        .sequence-display {
+            font-size: 50px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            min-height: 60px;
+        }
+        
+        .sequence-display div {
+            margin: 0 5px;
+            transition: transform 0.2s, opacity 0.2s;
+        }
+        
+        .sequence-display div.highlight {
+            transform: scale(1.4);
+            filter: drop-shadow(0 0 10px rgba(255, 152, 0, 0.7));
+        }
+        
+        .emoji-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .emoji-btn {
+            font-size: 30px;
+            background-color: #f5f5f5;
+            border: none;
+            border-radius: 8px;
+            padding: 10px;
+            cursor: pointer;
+            transition: transform 0.2s, background-color 0.2s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .emoji-btn:hover {
+            background-color: #eeeeee;
+            transform: translateY(-2px);
+        }
+        
+        .emoji-btn:active {
+            transform: translateY(0);
+        }
+        
+        .emoji-btn.disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .game-stats {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        
+        .game-stats div {
+            font-weight: bold;
+        }
+        
+        .status-message {
+            font-weight: bold;
+            margin: 15px 0;
+            min-height: 24px;
+            color: #555;
+        }
+        
+        .status-message.success {
+            color: #4caf50;
+        }
+        
+        .status-message.error {
+            color: #f44336;
+        }
+        
+        .start-btn {
+            background-color: #ff9800;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            margin: 0 5px;
+        }
+        
+        .start-btn:hover {
+            background-color: #f57c00;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+        }
+        
+        .start-btn:disabled {
+            background-color: #ffcc80;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .high-score {
+            margin-top: 10px;
+            font-weight: bold;
+            color: #ff9800;
+            background-color: #fff3e0;
+            padding: 10px 20px;
+            border-radius: 20px;
+            display: inline-block;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .new-high-score {
+            color: #FF5722;
+            animation: bounce 1s infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        
+        .back-btn {
+            position: absolute;
+            top: -15px;
+            left: 10px;
+            background-color: white;
+            color: #ff9800;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: transform 0.2s ease;
+        }
+        
+        .back-btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        /* Game overlay */
+        .game-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.8);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            z-index: 1;
+        }
+        
+        .overlay-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            text-align: center;
+            max-width: 80%;
+        }
+        
+        .overlay-content h2 {
+            color: #ff9800;
+            margin-top: 0;
+        }
+        
+        /* Result popup */
+        .result-popup {
+            display: none;
+            position: fixed;
+            z-index: 10;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+        
+        .result-content {
+            background-color: white;
+            margin: 15% auto;
+            padding: 20px;
+            border-radius: 15px;
+            width: 80%;
+            max-width: 400px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            animation: slideDown 0.5s;
+        }
+        
+        @keyframes slideDown {
+            from { transform: translateY(-300px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        .result-content h2 {
+            color: #ff9800;
+            margin-top: 0;
+        }
+        
+        .result-content button {
+            margin-top: 20px;
+        }
+        
+        .result-stats {
+            margin: 20px 0;
+            font-size: 18px;
+            line-height: 1.5;
+        }
+        
+        /* Mobile styles */
+        @media (max-width: 600px) {
+            .emoji-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            
+            .game-stats {
+                flex-direction: column;
+                gap: 10px;
+                align-items: center;
+            }
+            
+            .game-container {
+                padding: 15px;
+            }
+            
+            h1 {
+                font-size: 28px;
+            }
+            
+            .sequence-display {
+                font-size: 40px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Emoji Sequence</h1>
+    
+    <div class="game-container">
+        <button class="back-btn" onclick="goBack()">← Back to Games</button>
+        
+        <p>Watch the sequence of emojis, then repeat it in the same order. Each level adds a new emoji!</p>
+        
+        <div class="sequence-area">
+            <div class="sequence-display" id="sequenceDisplay"></div>
+            <div class="game-overlay" id="gameOverlay">
+                <div class="overlay-content">
+                    <h2>Ready to play?</h2>
+                    <p>Watch the sequence carefully, then repeat it by clicking the emojis in the same order.</p>
+                    <p>Click Start to begin!</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="status-message" id="statusMessage">Click Start to begin</div>
+        
+        <div class="emoji-grid" id="emojiGrid"></div>
+        
+        <div class="game-stats">
+            <div>Level: <span id="levelDisplay">1</span></div>
+            <div>Score: <span id="scoreDisplay">0</span></div>
+        </div>
+        
+        <div class="high-score" id="sequenceHighScore">High Score: 0</div>
+        
+        <button class="start-btn" id="startSequenceBtn" onclick="startSequenceGame()">Start Game</button>
+    </div>
+    
+    <div class="result-popup" id="resultPopup">
+        <div class="result-content">
+            <h2>Game Over!</h2>
+            <div class="result-stats" id="resultStats"></div>
+            <button class="start-btn" onclick="closeResultAndRestart()">Play Again</button>
+        </div>
+    </div>
+    
+    <script>
+        // Game variables
+        let sequenceEmojis = ['😀', '😂', '😍', '🤔', '😎', '😭', '😡', '👍'];
+        let gameSequence = [];
+        let playerSequence = [];
+        let level = 1;
+        let score = 0;
+        let isShowingSequence = false;
+        let canPlayerClick = false;
+        let sequenceHighScore = 0;
+        
+        // DOM elements
+        const sequenceDisplay = document.getElementById('sequenceDisplay');
+        const statusMessage = document.getElementById('statusMessage');
+        const emojiGrid = document.getElementById('emojiGrid');
+        const levelDisplay = document.getElementById('levelDisplay');
+        const scoreDisplay = document.getElementById('scoreDisplay');
+        const highScoreDisplay = document.getElementById('sequenceHighScore');
+        const startButton = document.getElementById('startSequenceBtn');
+        const gameOverlay = document.getElementById('gameOverlay');
+        const resultPopup = document.getElementById('resultPopup');
+        const resultStats = document.getElementById('resultStats');
+        
+        // Initialize game
+        function initializeGame() {
+            // Clear existing grid
+            emojiGrid.innerHTML = '';
+            
+            // Create emoji buttons
+            shuffleArray(sequenceEmojis);
+            const gameEmojis = sequenceEmojis.slice(0, 8); // Use 8 emojis for the game
+            
+            gameEmojis.forEach(emoji => {
+                const emojiButton = document.createElement('button');
+                emojiButton.classList.add('emoji-btn');
+                emojiButton.dataset.emoji = emoji;
+                emojiButton.innerHTML = emoji;
+                emojiButton.addEventListener('click', handleEmojiClick);
+                emojiGrid.appendChild(emojiButton);
+            });
+            
+            // Load high score
+            loadSequenceHighScore();
+        }
+        
+        // Start the sequence game
+        function startSequenceGame() {
+            // Reset game variables
+            gameSequence = [];
+            playerSequence = [];
+            level = 1;
+            score = 0;
+            
+            // Update UI
+            levelDisplay.textContent = level;
+            scoreDisplay.textContent = score;
+            sequenceDisplay.innerHTML = '';
+            statusMessage.textContent = 'Watch the sequence...';
+            statusMessage.className = 'status-message';
+            
+            // Hide overlay and disable start button
+            gameOverlay.style.display = 'none';
+            startButton.disabled = true;
+            
+            // Start the first round
+            setTimeout(nextRound, 1000);
+        }
+        
+        // Handle next round
+        function nextRound() {
+            isShowingSequence = true;
+            canPlayerClick = false;
+            
+            // Make all emoji buttons unclickable during sequence display
+            toggleEmojiButtons(true);
+            
+            // Add a new random emoji to the sequence
+            const randomIndex = Math.floor(Math.random() * 8);
+            const newEmoji = document.querySelectorAll('.emoji-btn')[randomIndex].dataset.emoji;
+            gameSequence.push(newEmoji);
+            
+            // Update the sequence display
+            updateSequenceDisplay();
+            
+            // Show the sequence with a delay between each emoji
+            let i = 0;
+            const interval = setInterval(() => {
+                // Reset all highlights
+                const emojis = sequenceDisplay.querySelectorAll('div');
+                emojis.forEach(emoji => emoji.classList.remove('highlight'));
+                
+                if (i < gameSequence.length) {
+                    // Highlight current emoji
+                    emojis[i].classList.add('highlight');
+                    i++;
+                } else {
+                    clearInterval(interval);
+                    // After showing sequence, let player repeat it
+                    setTimeout(() => {
+                        isShowingSequence = false;
+                        canPlayerClick = true;
+                        playerSequence = [];
+                        statusMessage.textContent = 'Your turn! Repeat the sequence';
+                        toggleEmojiButtons(false);
+                    }, 500);
+                }
+            }, 1000);
+        }
+        
+        // Update the sequence display
+        function updateSequenceDisplay() {
+            sequenceDisplay.innerHTML = '';
+            gameSequence.forEach(emoji => {
+                const emojiElement = document.createElement('div');
+                emojiElement.textContent = emoji;
+                sequenceDisplay.appendChild(emojiElement);
+            });
+        }
+        
+        // Toggle emoji buttons clickability
+        function toggleEmojiButtons(disabled) {
+            const buttons = document.querySelectorAll('.emoji-btn');
+            buttons.forEach(button => {
+                if (disabled) {
+                    button.classList.add('disabled');
+                } else {
+                    button.classList.remove('disabled');
+                }
+            });
+        }
+        
+        // Handle emoji button click
+        function handleEmojiClick(event) {
+            if (!canPlayerClick) return;
+            
+            const clickedEmoji = event.target.dataset.emoji;
+            playerSequence.push(clickedEmoji);
+            
+            // Highlight the clicked button briefly
+            event.target.classList.add('highlight');
+            setTimeout(() => {
+                event.target.classList.remove('highlight');
+            }, 300);
+            
+            // Check if the player's sequence is correct so far
+            const currentIndex = playerSequence.length - 1;
+            
+            if (playerSequence[currentIndex] !== gameSequence[currentIndex]) {
+                // Wrong sequence, game over
+                gameOver();
+                return;
+            }
+            
+            // Check if the full sequence has been entered correctly
+            if (playerSequence.length === gameSequence.length) {
+                // Correct sequence for this level
+                level++;
+                score += level * 10; // Score increases with level
+                
+                // Update UI
+                levelDisplay.textContent = level;
+                scoreDisplay.textContent = score;
+                
+                // Feedback
+                statusMessage.textContent = 'Correct! Next level...';
+                statusMessage.className = 'status-message success';
+                
+                // Wait and start next round
+                canPlayerClick = false;
+                toggleEmojiButtons(true);
+                
+                setTimeout(nextRound, 1500);
+            }
+        }
+        
+        // Game over
+        function gameOver() {
+            canPlayerClick = false;
+            toggleEmojiButtons(true);
+            
+            statusMessage.textContent = 'Game Over! Incorrect sequence.';
+            statusMessage.className = 'status-message error';
+            
+            // Enable start button
+            startButton.disabled = false;
+            
+            // Check for high score
+            if (score > sequenceHighScore) {
+                sequenceHighScore = score;
+                saveSequenceHighScore(score);
+                highScoreDisplay.textContent = `High Score: ${sequenceHighScore}`;
+                highScoreDisplay.classList.add('new-high-score');
+                
+                setTimeout(() => {
+                    highScoreDisplay.classList.remove('new-high-score');
+                }, 3000);
+            }
+            
+            // Save game result
+            saveSequenceResult();
+            
+            // Show result popup
+            resultStats.innerHTML = `
+                <p>Your score: ${score}</p>
+                <p>Level reached: ${level}</p>
+                <p>Sequence length: ${gameSequence.length}</p>
+            `;
+            
+            resultPopup.style.display = 'block';
+        }
+        
+        // Close result popup and restart
+        function closeResultAndRestart() {
+            resultPopup.style.display = 'none';
+            gameOverlay.style.display = 'flex';
+        }
+        
+        // Save sequence game result
+        function saveSequenceResult() {
+            const historyEntry = {
+                game: "Emoji Sequence",
+                result: `Level: ${level}, Score: ${score}`,
+                timestamp: new Date().toISOString(),
+                score: score
+            };
+            
+            saveGameHistory(historyEntry);
+        }
+        
+        // Save game history
+        function saveGameHistory(entry) {
+            // Get existing history or initialize empty array
+            let gameHistory = JSON.parse(localStorage.getItem("emojiGameHistory") || "[]");
+            
+            // Add new entry
+            gameHistory.push(entry);
+            
+            // Save back to localStorage
+            localStorage.setItem("emojiGameHistory", JSON.stringify(gameHistory));
+        }
+        
+        // Load sequence high score
+        function loadSequenceHighScore() {
+            sequenceHighScore = parseInt(localStorage.getItem("sequenceHighScore") || "0");
+            highScoreDisplay.textContent = `High Score: ${sequenceHighScore}`;
+        }
+        
+        // Save sequence high score
+        function saveSequenceHighScore(score) {
+            localStorage.setItem("sequenceHighScore", score.toString());
+        }
+        
+        // Fisher-Yates shuffle algorithm
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+        
+        // Navigation
+        function goBack() {
+            window.location.href = "index.html";
+        }
+        
+        // Initialize on page load
+        window.onload = function() {
+            initializeGame();
+        };
+    </script>
+</body>
+</html> 

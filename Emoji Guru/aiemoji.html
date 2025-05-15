@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Emoji Generator - Emoji Guru Pro</title>
+    <!-- Add modern fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Add FontAwesome for better icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #00bcd4;
+            --primary-dark: #0097a7;
+            --secondary-color: #E91E63;
+            --text-color: #333333;
+            --light-bg: #f7f7f7;
+            --card-bg: #ffffff;
+            --success-color: #4CAF50;
+            --warning-color: #FF9800;
+            --danger-color: #FF5252;
+            --info-color: #2196F3;
+            --border-radius: 8px;
+            --box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: var(--light-bg);
+            color: var(--text-color);
+            min-height: 100vh;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-x: hidden;
+        }
+
+        .header {
+            width: 100%;
+            padding: 20px 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            border-bottom-left-radius: 20px;
+            border-bottom-right-radius: 20px;
+            margin-bottom: 30px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-icon {
+            font-size: 32px;
+            color: var(--primary-color);
+        }
+
+        h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            color: var(--primary-color);
+            font-size: 32px;
+            position: relative;
+            margin-bottom: 0;
+        }
+
+        h1::after {
+            content: "Pro";
+            position: absolute;
+            top: -5px;
+            right: -40px;
+            background-color: var(--secondary-color);
+            color: white;
+            font-size: 14px;
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+
+        .main-container {
+            width: 90%;
+            max-width: 800px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 80px;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 16px 20px;
+            font-size: 16px;
+            font-family: 'Nunito', sans-serif;
+            border: 2px solid transparent;
+            border-radius: var(--border-radius);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+            background-color: var(--card-bg);
+            transition: var(--transition);
+            height: 120px;
+            resize: vertical;
+            margin-bottom: 20px;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 6px 15px rgba(108, 99, 255, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .emoji-btn {
+            padding: 14px 28px;
+            font-size: 16px;
+            font-weight: 600;
+            font-family: 'Montserrat', sans-serif;
+            cursor: pointer;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 10px 5px;
+        }
+
+        .emoji-btn:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .emoji-btn:active {
+            transform: translateY(-1px);
+        }
+
+        .back-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            z-index: 10;
+            transition: var(--transition);
+        }
+
+        .back-btn:hover {
+            background-color: var(--primary-dark);
+            transform: scale(1.1);
+        }
+
+        .history-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background-color: var(--secondary-color);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            z-index: 10;
+            transition: var(--transition);
+        }
+
+        .history-btn:hover {
+            background-color: #c2185b;
+            transform: scale(1.1);
+        }
+
+        .result-container {
+            width: 100%;
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 25px;
+            margin-top: 30px;
+            box-shadow: var(--box-shadow);
+            animation: fade 0.5s ease-in-out;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .result-container::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background-color: var(--primary-color);
+        }
+
+        @keyframes fade {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .emoji-display {
+            font-size: 60px;
+            margin: 20px 0;
+            min-height: 70px;
+            background-color: var(--light-bg);
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            animation: pulse 3s infinite ease-in-out;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .emoji-description {
+            font-size: 18px;
+            color: var(--text-color);
+            margin: 15px 0;
+            min-height: 50px;
+            line-height: 1.6;
+        }
+
+        .loader {
+            display: none;
+            margin: 20px auto;
+            text-align: center;
+        }
+
+        .loading-spinner {
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid var(--primary-color);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .examples {
+            margin-top: 40px;
+            text-align: left;
+            width: 100%;
+            background-color: var(--card-bg);
+            padding: 20px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+        }
+
+        .examples h3 {
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 10px;
+        }
+
+        .examples p {
+            margin: 12px 0;
+            font-size: 15px;
+            cursor: pointer;
+            transition: var(--transition);
+            padding: 10px 15px;
+            border-radius: var(--border-radius);
+            display: flex;
+            align-items: center;
+        }
+
+        .examples p:hover {
+            background-color: rgba(0, 188, 212, 0.1);
+            transform: translateX(5px);
+        }
+
+        .examples p:before {
+            content: "💡";
+            margin-right: 10px;
+            font-size: 18px;
+        }
+
+        .copy-button {
+            background-color: var(--info-color);
+            color: white;
+            font-size: 14px;
+            padding: 8px 15px;
+            border-radius: var(--border-radius);
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+        }
+
+        .copy-button:hover {
+            background-color: #0d8bf2;
+            transform: translateY(-2px);
+        }
+
+        /* Floating emoji animations */
+        .emoji-float {
+            position: absolute;
+            animation: float 6s ease-in-out infinite;
+            opacity: 0.7;
+            font-size: 20px;
+            pointer-events: none;
+        }
+
+        .emoji-1 { top: 20px; left: 15%; animation-delay: 0s; }
+        .emoji-2 { top: 15px; left: 85%; animation-delay: 1s; }
+        .emoji-3 { top: 60px; left: 10%; animation-delay: 2s; }
+        .emoji-4 { top: 50px; left: 90%; animation-delay: 3s; }
+
+        @media (max-width: 768px) {
+            .main-container {
+                width: 95%;
+            }
+
+            .back-btn, .history-btn {
+                width: 40px;
+                height: 40px;
+            }
+
+            .emoji-display {
+                width: 100px;
+                height: 100px;
+                font-size: 50px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .emoji-display {
+                width: 90px;
+                height: 90px;
+                font-size: 40px;
+            }
+
+            .examples p {
+                font-size: 14px;
+                padding: 8px 12px;
+            }
+
+            .examples p:before {
+                font-size: 16px;
+            }
+
+            .emoji-btn {
+                padding: 12px 20px;
+                font-size: 15px;
+            }
+
+            h1 {
+                font-size: 26px;
+            }
+
+            h1::after {
+                right: -35px;
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="back-btn">
+        <i class="fas fa-arrow-left"></i>
+    </a>
+    <a href="history.html" class="history-btn">
+        <i class="fas fa-history"></i>
+    </a>
+    
+    <div class="header">
+        <div class="logo">
+            <i class="fas fa-robot logo-icon"></i>
+            <h1>AI Generator</h1>
+        </div>
+        <!-- Floating emojis -->
+        <span class="emoji-float emoji-1">🤖</span>
+        <span class="emoji-float emoji-2">💫</span>
+        <span class="emoji-float emoji-3">✨</span>
+        <span class="emoji-float emoji-4">🧠</span>
+    </div>
+
+    <div class="main-container">
+        <textarea id="inputText" placeholder="Describe a feeling, emotion, or situation you want to create an emoji for..."></textarea>
+        
+        <div>
+            <button class="emoji-btn" onclick="generateEmoji()">
+                <i class="fas fa-magic"></i>
+                Generate Emoji
+            </button>
+            <button class="emoji-btn" style="background-color: var(--warning-color);" onclick="clearText()">
+                <i class="fas fa-eraser"></i>
+                Clear
+            </button>
+        </div>
+        
+        <div class="loader" id="loadingSpinner">
+            <div class="loading-spinner"></div>
+            <p>Generating your emoji...</p>
+        </div>
+        
+        <div class="result-container" id="resultContainer" style="display: none;">
+            <div class="emoji-display" id="emojiDisplay"></div>
+            <div class="emoji-description" id="emojiDescription"></div>
+            <button class="copy-button" onclick="copyResult()">
+                <i class="fas fa-copy"></i>
+                Copy Description
+            </button>
+        </div>
+        
+        <div class="examples">
+            <h3>Examples to Try:</h3>
+            <p>Overwhelming happiness with a hint of nervousness</p>
+            <p>Feeling nostalgic about childhood memories</p>
+            <p>That feeling when you finally solve a difficult problem</p>
+            <p>The mix of excitement and anxiety before a first date</p>
+        </div>
+    </div>
+
+    <script>
+        const API_KEY = "AIzaSyCh-T5vR2o8oDUn0T2tTA2cXMe0WNXEaf0";
+        // Variable to store AI provider (ai1 = Google Gemini, ai2 = Backup API)
+        let aiProvider = "ai1";
+        
+        // Load AI provider setting when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load AI provider setting from localStorage (default to ai1 if not set)
+            aiProvider = localStorage.getItem("aiProvider") || "ai1";
+            
+            const examples = document.querySelectorAll('.examples p');
+            examples.forEach(example => {
+                example.addEventListener('click', function() {
+                    document.getElementById('inputText').value = this.textContent.replace('• ', '');
+                });
+            });
+        });
+        
+        function generateEmoji() {
+            const inputText = document.getElementById('inputText').value.trim();
+            
+            if (!inputText) {
+                alert('Please enter a description for your emoji');
+                return;
+            }
+            
+            // Show loading spinner
+            document.getElementById('loadingSpinner').style.display = 'block';
+            document.getElementById('resultContainer').style.display = 'none';
+            
+            // Build the prompt for emoji generation
+            const prompt = `You are an emoji designer. Create a description of a single emoji based on this feeling or situation:
+"${inputText}"
+
+Format your response as JSON with two fields:
+1. "emoji": The closest existing emoji or emoji combination that represents this concept (limit to 3 emojis max)
+2. "description": A concise description of what this emoji represents and how it might look if created as a custom emoji (50-100 words)
+
+Example: 
+For input "feeling of accomplishment mixed with exhaustion", output:
+{
+  "emoji": "🏆😅",
+  "description": "A face with a triumphant smile, sweaty brow, and a small golden trophy hovering above one side. The eyes show both pride and tiredness, capturing that moment of success after a long, difficult effort."
+}`;
+            
+            // Check which AI provider to use
+            if (aiProvider === "ai1") {
+                queryGeminiAI(prompt, inputText);
+            } else {
+                queryBackupAI(prompt, inputText);
+            }
+        }
+        
+        // Function to query Google Gemini API
+        function queryGeminiAI(prompt, inputText) {
+            // Call the Gemini API
+            fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${API_KEY}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    contents: [{
+                        parts: [{ text: prompt }]
+                    }]
+                })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                // Extract the emoji generation from the response
+                let generatedContent = '';
+                if (data.candidates && data.candidates[0].content && data.candidates[0].content.parts) {
+                    generatedContent = data.candidates[0].content.parts[0].text;
+                    processApiResponse(generatedContent, inputText);
+                } else {
+                    throw new Error('Unexpected API response format');
+                }
+            })
+            .catch(error => {
+                handleApiError(error);
+            });
+        }
+        
+        // Function to query Backup AI API
+        function queryBackupAI(prompt, inputText) {
+            fetch("https://backend.buildpicoapps.com/aero/run/llm-api?pk=v1-Z0FBQUFBQm5IZkJDMlNyYUVUTjIyZVN3UWFNX3BFTU85SWpCM2NUMUk3T2dxejhLSzBhNWNMMXNzZlp3c09BSTR6YW1Sc1BmdGNTVk1GY0liT1RoWDZZX1lNZlZ0Z1dqd3c9PQ==", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    prompt: prompt
+                })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                // Extract response from backup API
+                let generatedContent = data.response || data.text || "No response from backup API";
+                processApiResponse(generatedContent, inputText);
+            })
+            .catch(error => {
+                handleApiError(error);
+            });
+        }
+        
+        // Process API response common function
+        function processApiResponse(generatedContent, inputText) {
+            // Parse the JSON response
+            let emojiData = {};
+            try {
+                // Find JSON object in the response (in case there's additional text)
+                const jsonMatch = generatedContent.match(/\{[\s\S]*\}/);
+                if (jsonMatch) {
+                    emojiData = JSON.parse(jsonMatch[0]);
+                } else {
+                    throw new Error('No valid JSON found in response');
+                }
+            } catch (e) {
+                console.error('Error parsing JSON:', e);
+                // Fallback if JSON parsing fails
+                emojiData = {
+                    emoji: "❓",
+                    description: "Could not parse response. Raw output: " + generatedContent.substring(0, 100) + "..."
+                };
+            }
+            
+            // Save to generation history
+            addToHistory(inputText, emojiData);
+            
+            // Display the result
+            document.getElementById('emojiDisplay').textContent = emojiData.emoji || "❓";
+            document.getElementById('emojiDescription').textContent = emojiData.description || "No description available";
+            document.getElementById('resultContainer').style.display = 'block';
+            
+            // Hide loading spinner
+            document.getElementById('loadingSpinner').style.display = 'none';
+        }
+        
+        // Handle API errors
+        function handleApiError(error) {
+            console.error('Error:', error);
+            document.getElementById('emojiDisplay').textContent = "⚠️";
+            document.getElementById('emojiDescription').textContent = 'Sorry, there was an error generating your emoji. Please try again.';
+            document.getElementById('resultContainer').style.display = 'block';
+            document.getElementById('loadingSpinner').style.display = 'none';
+        }
+        
+        function clearText() {
+            document.getElementById('inputText').value = '';
+            document.getElementById('resultContainer').style.display = 'none';
+        }
+        
+        function copyResult() {
+            const resultText = document.getElementById('emojiDescription').textContent;
+            navigator.clipboard.writeText(resultText)
+                .then(() => {
+                    const copyButton = document.querySelector('.copy-button');
+                    copyButton.innerHTML = '<i class="fas fa-check"></i> Copied!';
+                    setTimeout(() => {
+                        copyButton.innerHTML = '<i class="fas fa-copy"></i> Copy Description';
+                    }, 2000);
+                })
+                .catch(err => {
+                    console.error('Failed to copy text: ', err);
+                });
+        }
+        
+        function goToHome() {
+            window.location.href = 'index.html';
+        }
+        
+        function goToHistory() {
+            window.location.href = 'history.html';
+        }
+        
+        // Function to add to generation history
+        function addToHistory(input, emojiData) {
+            // Create history entry
+            const historyEntry = {
+                input: input,
+                emoji: emojiData.emoji || "",
+                description: emojiData.description || "",
+                timestamp: new Date().toISOString(),
+                type: "aiemoji"
+            };
+            
+            // Get existing history or initialize empty array
+            let history = JSON.parse(localStorage.getItem("aiEmojiHistory") || "[]");
+            
+            // Add new entry
+            history.push(historyEntry);
+            
+            // Save back to localStorage
+            localStorage.setItem("aiEmojiHistory", JSON.stringify(history));
+        }
+    </script>
+</body>
+</html> 

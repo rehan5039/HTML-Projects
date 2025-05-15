@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code - Emoji Guru Pro</title>
+    <!-- Add modern fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Add FontAwesome for better icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #00bcd4;
+            --primary-dark: #0097a7;
+            --secondary-color: #E91E63;
+            --text-color: #333333;
+            --light-bg: #f7f7f7;
+            --card-bg: #ffffff;
+            --success-color: #4CAF50;
+            --warning-color: #FF9800;
+            --danger-color: #FF5252;
+            --info-color: #2196F3;
+            --border-radius: 8px;
+            --box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Nunito', sans-serif;
+            text-align: center;
+            background-color: var(--light-bg);
+            margin: 0;
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .header {
+            width: 100%;
+            padding: 20px 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            border-bottom-left-radius: 20px;
+            border-bottom-right-radius: 20px;
+            margin-bottom: 30px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-icon {
+            font-size: 32px;
+            color: var(--primary-color);
+        }
+        
+        h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            color: var(--primary-color);
+            font-size: 32px;
+            position: relative;
+            margin-bottom: 0;
+        }
+
+        h1::after {
+            content: "Pro";
+            position: absolute;
+            top: -5px;
+            right: -40px;
+            background-color: var(--secondary-color);
+            color: white;
+            font-size: 14px;
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+        
+        h2 {
+            font-family: 'Montserrat', sans-serif;
+            color: var(--primary-color);
+            margin: 10px 0 20px;
+            font-size: 20px;
+        }
+        
+        .container {
+            width: 90%;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .qr-creator {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            margin-top: 20px;
+            gap: 20px;
+        }
+        
+        .options-panel {
+            flex: 1;
+            min-width: 300px;
+            max-width: 450px;
+        }
+        
+        .preview-panel {
+            flex: 1;
+            min-width: 300px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .panel {
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: var(--box-shadow);
+            transition: var(--transition);
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        textarea, input {
+            width: 100%;
+            padding: 14px;
+            font-size: 16px;
+            border: 2px solid #eee;
+            border-radius: var(--border-radius);
+            margin-bottom: 15px;
+            transition: var(--transition);
+            box-sizing: border-box;
+            font-family: 'Nunito', sans-serif;
+        }
+        
+        textarea {
+            height: 100px;
+            resize: vertical;
+        }
+        
+        textarea:focus, input:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(0, 188, 212, 0.2);
+        }
+        
+        button {
+            padding: 12px 24px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+            margin: 10px 5px;
+            font-family: 'Montserrat', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        button:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        #qrcode {
+            width: 256px;
+            height: 256px;
+            background-color: white;
+            padding: 20px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            margin: 20px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+        
+        #qrcode img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 4px;
+        }
+        
+        .back-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            z-index: 10;
+            transition: var(--transition);
+        }
+
+        .back-btn:hover {
+            background-color: var(--primary-dark);
+            transform: scale(1.1);
+        }
+        
+        .history-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background-color: var(--secondary-color);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            z-index: 10;
+            transition: var(--transition);
+        }
+
+        .history-btn:hover {
+            background-color: #c2185b;
+            transform: scale(1.1);
+        }
+        
+        .emoji-selector {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            gap: 10px;
+            width: 100%;
+            background-color: white;
+            padding: 15px;
+            border-radius: var(--border-radius);
+            max-height: 200px;
+            overflow-y: auto;
+            box-sizing: border-box;
+            margin-bottom: 20px;
+            border: 1px solid #eee;
+        }
+        
+        .emoji-item {
+            cursor: pointer;
+            font-size: 24px;
+            padding: 10px;
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .emoji-item:hover {
+            background-color: rgba(0, 188, 212, 0.1);
+            transform: scale(1.1);
+        }
+        
+        .emoji-item.selected {
+            background-color: rgba(0, 188, 212, 0.2);
+            border: 2px solid var(--primary-color);
+        }
+        
+        .option-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text-color);
+            font-size: 14px;
+            font-family: 'Montserrat', sans-serif;
+        }
+        
+        select {
+            width: 100%;
+            padding: 14px;
+            border-radius: var(--border-radius);
+            border: 2px solid #eee;
+            font-size: 16px;
+            background-color: white;
+            font-family: 'Nunito', sans-serif;
+            transition: var(--transition);
+        }
+        
+        select:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(0, 188, 212, 0.2);
+        }
+        
+        .color-picker {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+        }
+        
+        .color-picker input {
+            width: 60px;
+            height: 40px;
+            padding: 0;
+            border: none;
+            border-radius: var(--border-radius);
+            margin-right: 10px;
+            cursor: pointer;
+        }
+        
+        .color-label {
+            flex: 1;
+        }
+        
+        .slider-container {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+        }
+        
+        .slider-container input {
+            flex: 1;
+            margin-right: 10px;
+            margin-bottom: 0;
+            accent-color: var(--primary-color);
+        }
+        
+        .slider-value {
+            width: 40px;
+            text-align: right;
+            font-weight: 600;
+        }
+        
+        .loading-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        
+        .loading-text {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+        
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .qr-creator {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .options-panel {
+                max-width: 100%;
+                width: 100%;
+            }
+            
+            .emoji-selector {
+                grid-template-columns: repeat(6, 1fr);
+            }
+            
+            .container {
+                padding: 10px;
+                width: 95%;
+            }
+
+            .back-btn, .history-btn {
+                width: 40px;
+                height: 40px;
+                top: 15px;
+            }
+
+            .back-btn {
+                left: 15px;
+            }
+
+            .history-btn {
+                right: 15px;
+            }
+
+            h1 {
+                font-size: 26px;
+            }
+
+            h1::after {
+                right: -35px;
+                font-size: 12px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .emoji-selector {
+                grid-template-columns: repeat(4, 1fr);
+            }
+            
+            button {
+                padding: 10px 16px;
+                font-size: 14px;
+            }
+            
+            .panel {
+                padding: 15px;
+            }
+            
+            h2 {
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="back-btn">
+        <i class="fas fa-arrow-left"></i>
+    </a>
+    
+    <a href="history.html" class="history-btn">
+        <i class="fas fa-history"></i>
+    </a>
+    
+    <div class="header">
+        <div class="logo">
+            <i class="fas fa-qrcode logo-icon"></i>
+            <h1>QR Code Generator</h1>
+        </div>
+    </div>
+    
+    <div class="container">
+        <div class="qr-creator">
+            <div class="options-panel">
+                <div class="panel">
+                    <div class="option-group">
+                        <label for="inputType"><i class="fas fa-tag"></i> QR Code Type:</label>
+                        <select id="inputType" onchange="toggleInputType()">
+                            <option value="text">Text</option>
+                            <option value="url">URL</option>
+                        </select>
+                    </div>
+                    
+                    <div id="textInputContainer">
+                        <label for="textInput"><i class="fas fa-font"></i> Enter Text Content:</label>
+                        <textarea id="textInput" placeholder="Enter text for your QR code..."></textarea>
+                    </div>
+                    
+                    <div id="urlInputContainer" style="display:none;">
+                        <label for="urlInput"><i class="fas fa-link"></i> Enter URL:</label>
+                        <input type="url" id="urlInput" placeholder="Enter URL for your QR code...">
+                    </div>
+                </div>
+                
+                <div class="panel">
+                    <div class="option-group">
+                        <label for="selectedEmoji"><i class="far fa-smile"></i> Select Emoji for QR Dots:</label>
+                        <input type="text" id="selectedEmoji" placeholder="Selected emoji" readonly>
+                        
+                        <div class="emoji-selector" id="emojiSelector"></div>
+                    </div>
+                    
+                    <div class="option-group">
+                        <label for="foregroundColor"><i class="fas fa-fill-drip"></i> Foreground Color:</label>
+                        <div class="color-picker">
+                            <input type="color" id="foregroundColor" value="#000000">
+                            <span class="color-label">QR code dots color</span>
+                        </div>
+                    </div>
+                    
+                    <div class="option-group">
+                        <label for="backgroundColor"><i class="fas fa-fill"></i> Background Color:</label>
+                        <div class="color-picker">
+                            <input type="color" id="backgroundColor" value="#FFFFFF">
+                            <span class="color-label">QR code background color</span>
+                        </div>
+                    </div>
+                    
+                    <div class="option-group">
+                        <label for="emojiSize"><i class="fas fa-text-height"></i> Emoji Size:</label>
+                        <div class="slider-container">
+                            <input type="range" id="emojiSize" min="30" max="80" value="50">
+                            <span class="slider-value" id="emojiSizeValue">50%</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="action-buttons">
+                    <button onclick="generateQRCode()">
+                        <i class="fas fa-magic"></i> Generate QR Code
+                    </button>
+                </div>
+            </div>
+            
+            <div class="preview-panel">
+                <div class="panel">
+                    <h2><i class="fas fa-eye"></i> QR Code Preview</h2>
+                    <div id="qrcode"></div>
+                    <button onclick="downloadQRCode()" id="downloadBtn" style="display:none;">
+                        <i class="fas fa-download"></i> Download QR Code
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="emoji.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>
+    <script>
+        // Selected emoji for QR dots
+        let selectedEmoji = "⬛";
+        
+        // Populate emoji selector
+        function populateEmojiSelector() {
+            const emojiSelector = document.getElementById('emojiSelector');
+            const commonEmojis = ["⬛", "🔵", "🔴", "🟢", "🟣", "🟠", "🟡", "⚫", "⚪", "✨", "💫", "💯", "💥", "🌟", "🔶", "🔷"];
+            
+            // Add emoji from dictionary if available
+            if (typeof emojiDictionary !== 'undefined') {
+                const emojiList = Object.keys(emojiDictionary);
+                
+                // Merge with common emojis
+                const allEmojis = [...new Set([...commonEmojis, ...emojiList.slice(0, 32)])];
+                
+                // Display emojis
+                for (let i = 0; i < allEmojis.length; i++) {
+                    if (i >= 32) break; // Limit to 32 emojis
+                    
+                    const emojiItem = document.createElement('div');
+                    emojiItem.className = 'emoji-item';
+                    if (allEmojis[i] === selectedEmoji) {
+                        emojiItem.className += ' selected';
+                    }
+                    emojiItem.textContent = allEmojis[i];
+                    emojiItem.addEventListener('click', () => {
+                        // Remove selected class from all items
+                        document.querySelectorAll('.emoji-item').forEach(item => {
+                            item.classList.remove('selected');
+                        });
+                        // Add selected class to clicked item
+                        emojiItem.classList.add('selected');
+                        selectedEmoji = allEmojis[i];
+                        document.getElementById('selectedEmoji').value = selectedEmoji;
+                    });
+                    emojiSelector.appendChild(emojiItem);
+                }
+            } else {
+                // Fall back to common emojis only
+                for (let i = 0; i < commonEmojis.length; i++) {
+                    const emojiItem = document.createElement('div');
+                    emojiItem.className = 'emoji-item';
+                    if (commonEmojis[i] === selectedEmoji) {
+                        emojiItem.className += ' selected';
+                    }
+                    emojiItem.textContent = commonEmojis[i];
+                    emojiItem.addEventListener('click', () => {
+                        // Remove selected class from all items
+                        document.querySelectorAll('.emoji-item').forEach(item => {
+                            item.classList.remove('selected');
+                        });
+                        // Add selected class to clicked item
+                        emojiItem.classList.add('selected');
+                        selectedEmoji = commonEmojis[i];
+                        document.getElementById('selectedEmoji').value = selectedEmoji;
+                    });
+                    emojiSelector.appendChild(emojiItem);
+                }
+            }
+            
+            // Set default selected emoji
+            document.getElementById('selectedEmoji').value = selectedEmoji;
+        }
+        
+        // Toggle between text and URL input
+        function toggleInputType() {
+            const inputType = document.getElementById('inputType').value;
+            const textInputContainer = document.getElementById('textInputContainer');
+            const urlInputContainer = document.getElementById('urlInputContainer');
+            
+            if (inputType === 'text') {
+                textInputContainer.style.display = 'block';
+                urlInputContainer.style.display = 'none';
+            } else {
+                textInputContainer.style.display = 'none';
+                urlInputContainer.style.display = 'block';
+            }
+        }
+        
+        // Generate QR Code with emojis
+        function generateQRCode() {
+            // Get input content
+            const inputType = document.getElementById('inputType').value;
+            let qrContent = '';
+            
+            if (inputType === 'text') {
+                qrContent = document.getElementById('textInput').value;
+            } else {
+                qrContent = document.getElementById('urlInput').value;
+            }
+            
+            if (!qrContent) {
+                alert('Please enter some content for the QR code');
+                return;
+            }
+            
+            // Get colors
+            const foregroundColor = document.getElementById('foregroundColor').value;
+            const backgroundColor = document.getElementById('backgroundColor').value;
+            
+            // Clear previous QR code
+            const qrcodeContainer = document.getElementById('qrcode');
+            qrcodeContainer.innerHTML = '';
+            
+            try {
+                // Create QR code with TypeNum = 4 (appropriate for most text) and 
+                // Error Correction Level H (highest, 30%)
+                const qr = qrcode(4, 'H');
+                qr.addData(qrContent);
+                qr.make();
+                
+                // Get the QR code structure as a 2D array (modules)
+                const moduleCount = qr.getModuleCount();
+                const modules = [];
+                
+                for (let row = 0; row < moduleCount; row++) {
+                    const rowModules = [];
+                    for (let col = 0; col < moduleCount; col++) {
+                        rowModules.push(qr.isDark(row, col));
+                    }
+                    modules.push(rowModules);
+                }
+                
+                // Create a canvas to render our emoji QR code
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                
+                // Set canvas size (1px border around each module)
+                const cellSize = 20; // Size of each module in pixels
+                const margin = 40;   // Margin around the QR code
+                
+                canvas.width = moduleCount * cellSize + 2 * margin;
+                canvas.height = moduleCount * cellSize + 2 * margin;
+                
+                // Fill background
+                ctx.fillStyle = backgroundColor;
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                // Draw the QR code modules
+                for (let row = 0; row < moduleCount; row++) {
+                    for (let col = 0; col < moduleCount; col++) {
+                        if (modules[row][col]) {
+                            const x = col * cellSize + margin;
+                            const y = row * cellSize + margin;
+                            
+                            // Use emoji
+                            ctx.font = `${cellSize}px Arial`;
+                            ctx.textAlign = 'center';
+                            ctx.textBaseline = 'middle';
+                            ctx.fillText(selectedEmoji, x + cellSize/2, y + cellSize/2);
+                        }
+                    }
+                }
+                
+                // Convert canvas to image
+                const qrImage = document.createElement('img');
+                qrImage.src = canvas.toDataURL('image/png');
+                qrImage.alt = 'QR Code';
+                qrImage.style.maxWidth = '100%';
+                qrcodeContainer.appendChild(qrImage);
+                
+                // Show download button
+                document.getElementById('downloadBtn').style.display = 'inline-block';
+                
+                // Add to QR code history
+                addToQRCodeHistory(qrContent);
+                
+            } catch (error) {
+                console.error('Error generating QR code:', error);
+                qrcodeContainer.innerHTML = '<p>Error generating QR code. Please try again.</p>';
+            }
+        }
+        
+        // Download QR code
+        function downloadQRCode() {
+            const qrcodeImg = document.querySelector('#qrcode img');
+            if (!qrcodeImg) return;
+            
+            // Create a download link
+            const downloadLink = document.createElement('a');
+            downloadLink.href = qrcodeImg.src;
+            downloadLink.download = 'emoji-qrcode.png';
+            document.body.appendChild(downloadLink);
+            downloadLink.click();
+            document.body.removeChild(downloadLink);
+        }
+        
+        // Function to add to QR code history
+        function addToQRCodeHistory(text) {
+            // Create history entry
+            const historyEntry = {
+                text: text,
+                timestamp: new Date().toISOString()
+            };
+            
+            // Get existing history or initialize empty array
+            let history = JSON.parse(localStorage.getItem("qrcodeHistory") || "[]");
+            
+            // Add new entry
+            history.push(historyEntry);
+            
+            // Save back to localStorage
+            localStorage.setItem("qrcodeHistory", JSON.stringify(history));
+        }
+        
+        // Initialize page
+        window.onload = function() {
+            populateEmojiSelector();
+            
+            // Add event listener for emoji size slider
+            const emojiSizeSlider = document.getElementById('emojiSize');
+            const emojiSizeValue = document.getElementById('emojiSizeValue');
+            
+            emojiSizeSlider.addEventListener('input', function() {
+                emojiSizeValue.textContent = this.value + '%';
+            });
+        };
+    </script>
+</body>
+</html> 

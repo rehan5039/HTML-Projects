@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emoji List - Emoji Guru Pro</title>
+    <!-- Add modern fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Add FontAwesome for better icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #00bcd4;
+            --primary-dark: #0097a7;
+            --secondary-color: #E91E63;
+            --text-color: #333333;
+            --light-bg: #f7f7f7;
+            --card-bg: #ffffff;
+            --success-color: #4CAF50;
+            --warning-color: #FF9800;
+            --danger-color: #FF5252;
+            --info-color: #2196F3;
+            --border-radius: 8px;
+            --box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: var(--light-bg);
+            color: var(--text-color);
+            min-height: 100vh;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-x: hidden;
+        }
+
+        .header {
+            width: 100%;
+            padding: 20px 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            border-bottom-left-radius: 20px;
+            border-bottom-right-radius: 20px;
+            margin-bottom: 30px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-icon {
+            font-size: 32px;
+            color: var(--primary-color);
+        }
+
+        h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            color: var(--primary-color);
+            font-size: 32px;
+            position: relative;
+            margin-bottom: 0;
+        }
+
+        h1::after {
+            content: "Pro";
+            position: absolute;
+            top: -5px;
+            right: -40px;
+            background-color: var(--secondary-color);
+            color: white;
+            font-size: 14px;
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+
+        .main-container {
+            width: 90%;
+            max-width: 800px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 80px;
+        }
+
+        .search-container {
+            width: 100%;
+            max-width: 500px;
+            position: relative;
+            margin: 20px 0 30px;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #aaa;
+            font-size: 18px;
+            transition: var(--transition);
+        }
+
+        input {
+            width: 100%;
+            padding: 16px 20px 16px 45px;
+            font-size: 16px;
+            font-family: 'Nunito', sans-serif;
+            border: 2px solid transparent;
+            border-radius: var(--border-radius);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+            background-color: var(--card-bg);
+            transition: var(--transition);
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 6px 15px rgba(108, 99, 255, 0.15);
+            transform: translateY(-2px);
+        }
+
+        input:focus + .search-icon {
+            color: var(--primary-color);
+        }
+
+        /* Back button */
+        .back-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            z-index: 10;
+        }
+
+        /* Emoji list container */
+        .emoji-list-container {
+            width: 100%;
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            margin-top: 20px;
+            box-shadow: var(--box-shadow);
+        }
+
+        .emoji-item {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+        }
+
+        .emoji-item:last-child {
+            border-bottom: none;
+        }
+
+        .emoji-char {
+            font-size: 32px;
+            margin-right: 15px;
+            min-width: 50px;
+            text-align: center;
+        }
+
+        .emoji-meaning {
+            font-size: 16px;
+            color: var(--text-color);
+        }
+
+        .emoji-card-title {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .emoji-count {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        h2 {
+            margin: 0;
+            color: var(--primary-color);
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        @media (max-width: 768px) {
+            .back-btn {
+                top: 15px;
+                left: 15px;
+                width: 40px;
+                height: 40px;
+            }
+
+            .emoji-char {
+                font-size: 28px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .emoji-item {
+                padding: 12px 10px;
+            }
+
+            .emoji-char {
+                font-size: 24px;
+                margin-right: 10px;
+                min-width: 40px;
+            }
+
+            .emoji-meaning {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="back-btn">
+        <i class="fas fa-arrow-left"></i>
+    </a>
+
+    <div class="header">
+        <div class="logo">
+            <i class="fas fa-laugh-beam logo-icon"></i>
+            <h1>Emoji List</h1>
+        </div>
+    </div>
+
+    <div class="main-container">
+        <div class="search-container">
+            <input type="text" id="emojiSearchInput" placeholder="Search emojis..." title="Filter emojis">
+            <i class="fas fa-search search-icon"></i>
+        </div>
+
+        <div class="emoji-list-container">
+            <div class="emoji-card-title">
+                <h2>All Emojis</h2>
+                <span class="emoji-count" id="emojiCount">0 emojis</span>
+            </div>
+            <div id="emojiListContainer">
+                <!-- Emojis will be loaded here -->
+                <div class="emoji-item">
+                    <span class="emoji-char">😀</span>
+                    <span class="emoji-meaning">Grinning Face</span>
+                </div>
+                <div class="emoji-item">
+                    <span class="emoji-char">😂</span>
+                    <span class="emoji-meaning">Face with Tears of Joy</span>
+                </div>
+                <div class="emoji-item">
+                    <span class="emoji-char">Loading...</span>
+                    <span class="emoji-meaning">Please wait while emoji list loads</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="emoji.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const emojiListContainer = document.getElementById('emojiListContainer');
+            const emojiSearchInput = document.getElementById('emojiSearchInput');
+            const emojiCountElement = document.getElementById('emojiCount');
+            
+            // Function to populate the emoji list
+            function populateEmojiList(filter = '') {
+                // Clear current list
+                emojiListContainer.innerHTML = '';
+                
+                let count = 0;
+                const filterLower = filter.toLowerCase();
+                
+                // Loop through the emoji dictionary
+                for (const emoji in emojiDictionary) {
+                    const meaning = emojiDictionary[emoji];
+                    
+                    // Apply filter if there is one
+                    if (filter && 
+                        !emoji.includes(filter) && 
+                        !meaning.toLowerCase().includes(filterLower)) {
+                        continue;
+                    }
+                    
+                    // Create emoji item element
+                    const emojiItem = document.createElement('div');
+                    emojiItem.className = 'emoji-item';
+                    
+                    // Create emoji character element
+                    const emojiChar = document.createElement('span');
+                    emojiChar.className = 'emoji-char';
+                    emojiChar.textContent = emoji;
+                    
+                    // Create emoji meaning element
+                    const emojiMeaning = document.createElement('span');
+                    emojiMeaning.className = 'emoji-meaning';
+                    emojiMeaning.textContent = meaning;
+                    
+                    // Append elements to emoji item
+                    emojiItem.appendChild(emojiChar);
+                    emojiItem.appendChild(emojiMeaning);
+                    
+                    // Append emoji item to container
+                    emojiListContainer.appendChild(emojiItem);
+                    
+                    count++;
+                }
+                
+                // Update emoji count
+                emojiCountElement.textContent = `${count} emoji${count !== 1 ? 's' : ''}`;
+            }
+            
+            // Event listener for search input
+            emojiSearchInput.addEventListener('input', function() {
+                populateEmojiList(this.value);
+            });
+            
+            // Initial population of the emoji list
+            populateEmojiList();
+        });
+    </script>
+</body>
+</html> 

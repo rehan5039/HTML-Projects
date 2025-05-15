@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emoji Word Match</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            text-align: center;
+            background-color: #ffebee;
+            padding-top: 60px;
+            margin: 0;
+            min-height: 100vh;
+            background-image: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%);
+        }
+        
+        h1 {
+            color: #e91e63;
+            font-size: 36px;
+            margin-bottom: 20px;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .game-container {
+            width: 90%;
+            max-width: 600px;
+            margin: 0 auto 40px auto;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            padding: 25px;
+            position: relative;
+        }
+        
+        .game-area {
+            background-color: #f9f9f9;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.1);
+            position: relative;
+        }
+        
+        .word-display {
+            font-size: 28px;
+            font-weight: bold;
+            color: #333;
+            margin: 15px 0;
+            min-height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .word-display span {
+            background-color: #f3f3f3;
+            padding: 5px 15px;
+            border-radius: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: inline-block;
+            animation: fadeIn 0.5s;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .emoji-options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .emoji-option {
+            font-size: 40px;
+            background-color: #f5f5f5;
+            border: none;
+            border-radius: 10px;
+            padding: 15px;
+            cursor: pointer;
+            transition: transform 0.3s, background-color 0.3s;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+        }
+        
+        .emoji-option:hover {
+            transform: translateY(-5px);
+            background-color: #f0f0f0;
+            box-shadow: 0 5px 10px rgba(0,0,0,0.15);
+        }
+        
+        .emoji-option.correct {
+            background-color: #a5d6a7;
+            animation: pulse 1s;
+        }
+        
+        .emoji-option.incorrect {
+            background-color: #ef9a9a;
+            animation: shake 0.5s;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(76, 175, 80, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0); }
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+        
+        .progress-bar {
+            height: 10px;
+            background-color: #e0e0e0;
+            border-radius: 5px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background-color: #e91e63;
+            width: 0%;
+            transition: width 0.3s;
+        }
+        
+        .game-stats {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        
+        .game-stats div {
+            font-weight: bold;
+        }
+        
+        .feedback {
+            font-weight: bold;
+            min-height: 24px;
+            margin: 10px 0;
+        }
+        
+        .feedback.correct {
+            color: #4caf50;
+        }
+        
+        .feedback.incorrect {
+            color: #f44336;
+        }
+        
+        .start-btn {
+            background-color: #e91e63;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        
+        .start-btn:hover {
+            background-color: #c2185b;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+        }
+        
+        .start-btn:disabled {
+            background-color: #f8bbd0;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .high-score {
+            margin-top: 10px;
+            font-weight: bold;
+            color: #e91e63;
+            background-color: #ffebee;
+            padding: 10px 20px;
+            border-radius: 20px;
+            display: inline-block;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .new-high-score {
+            color: #FF5722;
+            animation: bounce 1s infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        
+        .back-btn {
+            position: absolute;
+            top: -15px;
+            left: 10px;
+            background-color: white;
+            color: #e91e63;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: transform 0.2s ease;
+        }
+        
+        .back-btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .timer-container {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: #f5f5f5;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: bold;
+            color: #e91e63;
+        }
+        
+        /* Result popup */
+        .result-popup {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+        
+        .result-content {
+            background-color: white;
+            margin: 15% auto;
+            padding: 20px;
+            border-radius: 15px;
+            width: 80%;
+            max-width: 400px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            animation: slideDown 0.5s;
+        }
+        
+        @keyframes slideDown {
+            from { transform: translateY(-300px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        .result-content h2 {
+            color: #e91e63;
+            margin-top: 0;
+        }
+        
+        .result-content button {
+            margin-top: 20px;
+        }
+        
+        .result-stats {
+            margin: 20px 0;
+            font-size: 18px;
+            line-height: 1.5;
+        }
+        
+        /* Mobile styles */
+        @media (max-width: 600px) {
+            .game-stats {
+                flex-direction: column;
+                gap: 10px;
+                align-items: center;
+            }
+            
+            .game-container {
+                padding: 15px;
+            }
+            
+            h1 {
+                font-size: 28px;
+            }
+            
+            .emoji-options {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Emoji Word Match</h1>
+    
+    <div class="game-container">
+        <button class="back-btn" onclick="goBack()">← Back to Games</button>
+        
+        <p>Match the correct emoji with the displayed word. Be quick and accurate!</p>
+        
+        <div class="game-area">
+            <div class="timer-container" id="timerDisplay">10</div>
+            <div class="word-display" id="wordDisplay">Click Start to begin</div>
+            <div class="emoji-options" id="emojiOptions"></div>
+            <div class="feedback" id="feedback"></div>
+        </div>
+        
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+        
+        <div class="game-stats">
+            <div>Score: <span id="wordScore">0</span></div>
+            <div>Round: <span id="roundNumber">0</span>/10</div>
+        </div>
+        
+        <div class="high-score" id="wordHighScore">High Score: 0</div>
+        
+        <button class="start-btn" id="startWordBtn" onclick="startWordGame()">Start Game</button>
+    </div>
+    
+    <div class="result-popup" id="resultPopup">
+        <div class="result-content">
+            <h2>Game Over!</h2>
+            <div class="result-stats" id="resultStats"></div>
+            <button class="start-btn" onclick="closeResultAndRestart()">Play Again</button>
+        </div>
+    </div>
+    
+    <script>
+        // Game variables
+        let wordTimer;
+        let timePerRound = 10;
+        let timeLeft = 10;
+        let currentRound = 0;
+        let totalRounds = 10;
+        let wordScore = 0;
+        let gameRunning = false;
+        let wordHighScore = 0;
+        let wordData = [];
+        let currentWord = {};
+        
+        // DOM elements
+        const wordDisplay = document.getElementById('wordDisplay');
+        const emojiOptions = document.getElementById('emojiOptions');
+        const feedback = document.getElementById('feedback');
+        const progressFill = document.getElementById('progressFill');
+        const scoreDisplay = document.getElementById('wordScore');
+        const roundDisplay = document.getElementById('roundNumber');
+        const timerDisplay = document.getElementById('timerDisplay');
+        const startBtn = document.getElementById('startWordBtn');
+        const highScoreDisplay = document.getElementById('wordHighScore');
+        const resultPopup = document.getElementById('resultPopup');
+        const resultStats = document.getElementById('resultStats');
+        
+        // Initialize word data
+        function initWordData() {
+            wordData = [
+                { word: "smile", emoji: "😊", options: ["😊", "😢", "😡", "😴"] },
+                { word: "laugh", emoji: "😂", options: ["😂", "😮", "🤔", "😎"] },
+                { word: "love", emoji: "❤️", options: ["❤️", "👍", "👎", "👏"] },
+                { word: "fire", emoji: "🔥", options: ["🔥", "💧", "❄️", "⚡"] },
+                { word: "star", emoji: "⭐", options: ["⭐", "🌙", "☁️", "🌈"] },
+                { word: "money", emoji: "💰", options: ["💰", "🎁", "📦", "🧸"] },
+                { word: "party", emoji: "🎉", options: ["🎉", "🎂", "🎁", "🎊"] },
+                { word: "rocket", emoji: "🚀", options: ["🚀", "✈️", "🚗", "🚢"] },
+                { word: "ghost", emoji: "👻", options: ["👻", "💀", "👽", "🤖"] },
+                { word: "music", emoji: "🎵", options: ["🎵", "🎮", "📱", "📺"] },
+                { word: "pizza", emoji: "🍕", options: ["🍕", "🍔", "🍟", "🌭"] },
+                { word: "book", emoji: "📚", options: ["📚", "📝", "📱", "💻"] },
+                { word: "clock", emoji: "⏰", options: ["⏰", "⌚", "📅", "📆"] },
+                { word: "alien", emoji: "👽", options: ["👽", "👻", "🤖", "💀"] },
+                { word: "rainbow", emoji: "🌈", options: ["🌈", "☁️", "⛅", "🌧️"] }
+            ];
+            shuffleArray(wordData);
+        }
+        
+        // Start the word match game
+        function startWordGame() {
+            // Load high score
+            loadWordHighScore();
+            
+            // Initialize game variables
+            currentRound = 0;
+            wordScore = 0;
+            gameRunning = true;
+            
+            // Initialize word data
+            initWordData();
+            
+            // Update UI
+            scoreDisplay.textContent = wordScore;
+            roundDisplay.textContent = `0/${totalRounds}`;
+            progressFill.style.width = '0%';
+            
+            // Clear feedback
+            feedback.textContent = '';
+            feedback.className = 'feedback';
+            
+            // Disable start button
+            startBtn.disabled = true;
+            
+            // Load first word
+            nextWord();
+        }
+        
+        // Load the next word
+        function nextWord() {
+            if (currentRound >= totalRounds) {
+                endWordGame();
+                return;
+            }
+            
+            currentRound++;
+            roundDisplay.textContent = `${currentRound}/${totalRounds}`;
+            progressFill.style.width = `${(currentRound / totalRounds) * 100}%`;
+            
+            // Reset timer
+            timeLeft = timePerRound;
+            timerDisplay.textContent = timeLeft;
+            
+            // Clear previous timer
+            if (wordTimer) clearInterval(wordTimer);
+            
+            // Start new timer
+            wordTimer = setInterval(updateWordTimer, 1000);
+            
+            // Get current word
+            currentWord = wordData[currentRound - 1];
+            
+            // Update word display
+            wordDisplay.innerHTML = `<span>${currentWord.word}</span>`;
+            
+            // Shuffle options
+            const options = [...currentWord.options];
+            shuffleArray(options);
+            
+            // Update emoji options
+            emojiOptions.innerHTML = '';
+            options.forEach(emoji => {
+                const optionButton = document.createElement('button');
+                optionButton.classList.add('emoji-option');
+                optionButton.innerHTML = emoji;
+                optionButton.addEventListener('click', () => checkWordAnswer(emoji));
+                emojiOptions.appendChild(optionButton);
+            });
+            
+            // Clear feedback
+            feedback.textContent = '';
+            feedback.className = 'feedback';
+        }
+        
+        // Update the timer
+        function updateWordTimer() {
+            timeLeft--;
+            timerDisplay.textContent = timeLeft;
+            
+            if (timeLeft <= 0) {
+                // Time's up for this word
+                clearInterval(wordTimer);
+                
+                // Show correct answer
+                const buttons = document.querySelectorAll('.emoji-option');
+                buttons.forEach(button => {
+                    if (button.innerHTML === currentWord.emoji) {
+                        button.classList.add('correct');
+                    }
+                });
+                
+                feedback.textContent = `Time's up! The correct answer was ${currentWord.emoji}`;
+                feedback.className = 'feedback incorrect';
+                
+                // Save result
+                saveWordResult(currentWord.word, false);
+                
+                // Move to next word after delay
+                setTimeout(nextWord, 2000);
+            }
+        }
+        
+        // Check the player's answer
+        function checkWordAnswer(selectedEmoji) {
+            if (!gameRunning) return;
+            
+            // Stop the timer
+            clearInterval(wordTimer);
+            
+            // Get all option buttons
+            const buttons = document.querySelectorAll('.emoji-option');
+            
+            // Check if answer is correct
+            const isCorrect = selectedEmoji === currentWord.emoji;
+            
+            if (isCorrect) {
+                // Correct answer
+                feedback.textContent = 'Correct!';
+                feedback.className = 'feedback correct';
+                
+                // Highlight the correct button
+                buttons.forEach(button => {
+                    if (button.innerHTML === selectedEmoji) {
+                        button.classList.add('correct');
+                    }
+                });
+                
+                // Award points (more points for faster answers)
+                const pointsEarned = 10 + timeLeft;
+                wordScore += pointsEarned;
+                scoreDisplay.textContent = wordScore;
+                
+                // Save result
+                saveWordResult(currentWord.word, true);
+                
+            } else {
+                // Incorrect answer
+                feedback.textContent = `Incorrect! The correct answer was ${currentWord.emoji}`;
+                feedback.className = 'feedback incorrect';
+                
+                // Highlight selected and correct buttons
+                buttons.forEach(button => {
+                    if (button.innerHTML === selectedEmoji) {
+                        button.classList.add('incorrect');
+                    } else if (button.innerHTML === currentWord.emoji) {
+                        button.classList.add('correct');
+                    }
+                });
+                
+                // Save result
+                saveWordResult(currentWord.word, false);
+            }
+            
+            // Move to next word after delay
+            setTimeout(nextWord, 2000);
+        }
+        
+        // End the word game
+        function endWordGame() {
+            clearInterval(wordTimer);
+            gameRunning = false;
+            
+            // Enable start button
+            startBtn.disabled = false;
+            
+            // Check for high score
+            if (wordScore > wordHighScore) {
+                wordHighScore = wordScore;
+                saveWordHighScore(wordScore);
+                highScoreDisplay.textContent = `High Score: ${wordHighScore}`;
+                highScoreDisplay.classList.add('new-high-score');
+                
+                setTimeout(() => {
+                    highScoreDisplay.classList.remove('new-high-score');
+                }, 3000);
+            }
+            
+            // Show results
+            resultStats.innerHTML = `
+                <p>Your score: ${wordScore}</p>
+                <p>Rounds completed: ${currentRound} / ${totalRounds}</p>
+            `;
+            
+            resultPopup.style.display = 'block';
+        }
+        
+        // Close result popup and restart
+        function closeResultAndRestart() {
+            resultPopup.style.display = 'none';
+            startWordGame();
+        }
+        
+        // Save word game result
+        function saveWordResult(word, isCorrect) {
+            const historyEntry = {
+                game: "Emoji Word Match",
+                result: `"${word}" - ${isCorrect ? "Correct" : "Incorrect"}`,
+                timestamp: new Date().toISOString(),
+                score: isCorrect ? 10 : 0
+            };
+            
+            saveGameHistory(historyEntry);
+        }
+        
+        // Save game history
+        function saveGameHistory(entry) {
+            // Get existing history or initialize empty array
+            let gameHistory = JSON.parse(localStorage.getItem("emojiGameHistory") || "[]");
+            
+            // Add new entry
+            gameHistory.push(entry);
+            
+            // Save back to localStorage
+            localStorage.setItem("emojiGameHistory", JSON.stringify(gameHistory));
+        }
+        
+        // Load word high score
+        function loadWordHighScore() {
+            wordHighScore = parseInt(localStorage.getItem("wordHighScore") || "0");
+            highScoreDisplay.textContent = `High Score: ${wordHighScore}`;
+        }
+        
+        // Save word high score
+        function saveWordHighScore(score) {
+            localStorage.setItem("wordHighScore", score.toString());
+        }
+        
+        // Fisher-Yates shuffle algorithm
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+        
+        // Navigation
+        function goBack() {
+            window.location.href = "index.html";
+        }
+        
+        // Initialize on page load
+        window.onload = function() {
+            loadWordHighScore();
+        };
+    </script>
+</body>
+</html> 

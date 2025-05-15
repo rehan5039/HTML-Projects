@@ -1,0 +1,1901 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emoji Mixer - Emoji Guru Pro</title>
+    <!-- Add modern fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Add FontAwesome for better icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #00bcd4;
+            --primary-dark: #0097a7;
+            --secondary-color: #E91E63;
+            --text-color: #333333;
+            --light-bg: #f7f7f7;
+            --card-bg: #ffffff;
+            --success-color: #4CAF50;
+            --warning-color: #FF9800;
+            --danger-color: #FF5252;
+            --info-color: #2196F3;
+            --border-radius: 8px;
+            --box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            text-align: center;
+            background-color: var(--light-bg);
+            color: var(--text-color);
+            padding-top: 20px;
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .header {
+            width: 100%;
+            padding: 15px 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            border-bottom-left-radius: 20px;
+            border-bottom-right-radius: 20px;
+            margin-bottom: 30px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-icon {
+            font-size: 32px;
+            color: var(--primary-color);
+        }
+
+        h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            color: var(--primary-color);
+            font-size: 32px;
+            position: relative;
+            margin-bottom: 0;
+        }
+
+        h1::after {
+            content: "Pro";
+            position: absolute;
+            top: -5px;
+            right: -40px;
+            background-color: var(--secondary-color);
+            color: white;
+            font-size: 14px;
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            margin-bottom: 30px;
+            width: 95%;
+        }
+
+        .emoji-palette {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin: 20px 0;
+            max-height: 150px;
+            overflow-y: auto;
+            padding: 15px;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: var(--border-radius);
+            background-color: rgba(255, 255, 255, 0.8);
+            scrollbar-width: thin;
+            scrollbar-color: var(--primary-color) transparent;
+        }
+
+        .emoji-palette::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .emoji-palette::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .emoji-palette::-webkit-scrollbar-thumb {
+            background-color: var(--primary-color);
+            border-radius: 20px;
+        }
+
+        .emoji-item {
+            font-size: 28px;
+            margin: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+        }
+
+        .emoji-item:hover {
+            transform: scale(1.2);
+            background-color: rgba(0, 188, 212, 0.1);
+        }
+
+        .canvas-container {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+            position: relative;
+            overflow: hidden;
+            border-radius: var(--border-radius);
+        }
+
+        canvas {
+            border: 2px solid var(--primary-color);
+            background-color: white;
+            max-width: 100%;
+            height: auto;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin: 20px 0;
+            gap: 10px;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 15px;
+            font-weight: 600;
+            font-family: 'Montserrat', sans-serif;
+            cursor: pointer;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+            margin: 5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        button:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        button:active {
+            transform: translateY(-1px);
+        }
+
+        .search-box {
+            margin: 20px 0;
+            position: relative;
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        input {
+            padding: 12px 20px;
+            padding-left: 40px;
+            font-size: 16px;
+            font-family: 'Nunito', sans-serif;
+            border: 2px solid transparent;
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.8);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .search-box::before {
+            content: "\f002";
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--primary-color);
+            z-index: 1;
+        }
+
+        input:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 5px 15px rgba(0, 188, 212, 0.2);
+        }
+
+        .selected-emojis {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: var(--border-radius);
+            min-height: 65px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            background-color: rgba(255, 255, 255, 0.8);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .layer-controls {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin: 10px 0;
+            gap: 6px;
+        }
+
+        .back-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            z-index: 10;
+            transition: var(--transition);
+        }
+
+        .back-btn:hover {
+            background-color: var(--primary-dark);
+            transform: scale(1.1);
+        }
+
+        .history-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background-color: var(--secondary-color);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            z-index: 10;
+            transition: var(--transition);
+        }
+
+        .history-btn:hover {
+            background-color: #c2185b;
+            transform: scale(1.1);
+        }
+
+        .emoji-categories {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin: 10px 0;
+            gap: 6px;
+        }
+        
+        .emoji-categories button {
+            margin: 3px;
+            padding: 8px 15px;
+            font-size: 14px;
+        }
+        
+        .filter-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            margin: 10px 0;
+            gap: 10px;
+        }
+        
+        .filter-controls select, .filter-controls input {
+            margin: 5px;
+            padding: 8px 12px;
+            border-radius: var(--border-radius);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        
+        .advanced-controls {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            margin: 10px 0;
+            padding: 15px;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: var(--border-radius);
+            background-color: rgba(255, 255, 255, 0.8);
+        }
+        
+        .opacity-control {
+            display: flex;
+            align-items: center;
+            margin: 0 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .opacity-control label {
+            margin-right: 10px;
+            font-weight: 600;
+        }
+        
+        .opacity-control input {
+            width: 120px;
+            height: 8px;
+            appearance: none;
+            background: linear-gradient(to right, var(--primary-color), var(--primary-dark));
+            border-radius: 10px;
+            outline: none;
+        }
+        
+        .opacity-control input::-webkit-slider-thumb {
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: white;
+            border: 2px solid var(--primary-color);
+            cursor: pointer;
+        }
+        
+        .controls-section {
+            width: 100%;
+            margin-bottom: 15px;
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+        
+        .controls-title {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 10px;
+            font-weight: 600;
+            border-radius: var(--border-radius) var(--border-radius) 0 0;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .controls-title:hover {
+            background-color: var(--primary-dark);
+        }
+        
+        .controls-content {
+            padding: 15px;
+            transition: max-height 0.3s ease;
+        }
+        
+        .collapsed .controls-content {
+            max-height: 0;
+            overflow: hidden;
+            padding: 0;
+        }
+        
+        /* Brush tools styles */
+        .brush-controls {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            margin: 10px 0;
+            padding: 15px;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: var(--border-radius);
+            background-color: rgba(255, 255, 255, 0.8);
+            gap: 15px;
+        }
+        
+        .brush-size-control {
+            display: flex;
+            align-items: center;
+            margin: 0 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .brush-size-control label {
+            margin-right: 10px;
+            font-weight: 600;
+        }
+        
+        .brush-size-control input {
+            width: 120px;
+            height: 8px;
+            appearance: none;
+            background: linear-gradient(to right, #ccc, #333);
+            border-radius: 10px;
+            outline: none;
+        }
+        
+        .brush-size-control input::-webkit-slider-thumb {
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: white;
+            border: 2px solid var(--primary-color);
+            cursor: pointer;
+        }
+        
+        .color-palette {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin: 5px 0;
+            gap: 6px;
+        }
+        
+        .color-option {
+            width: 25px;
+            height: 25px;
+            margin: 3px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid #ccc;
+            transition: var(--transition);
+        }
+        
+        .color-option:hover, .color-option.selected {
+            transform: scale(1.2);
+            border-color: #333;
+        }
+        
+        .tool-option {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0 10px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .tool-option:hover {
+            transform: translateY(-3px);
+        }
+        
+        .tool-option.selected .tool-icon {
+            background-color: var(--primary-color);
+            color: white;
+            transform: scale(1.1);
+        }
+        
+        .tool-icon {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 20px;
+            background-color: #f0f0f0;
+            border-radius: 8px;
+            margin-bottom: 5px;
+            transition: var(--transition);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .tool-label {
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        /* Responsive styles */
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+                margin: 0 10px 30px 10px;
+            }
+            
+            h1 {
+                font-size: 26px;
+            }
+            
+            h1::after {
+                right: -35px;
+                font-size: 12px;
+            }
+            
+            .back-btn, .history-btn {
+                width: 40px;
+                height: 40px;
+                top: 15px;
+            }
+
+            .back-btn {
+                left: 15px;
+            }
+
+            .history-btn {
+                right: 15px;
+            }
+            
+            button {
+                padding: 10px 15px;
+                font-size: 14px;
+                margin: 3px;
+                min-width: 80px;
+            }
+            
+            .emoji-item {
+                font-size: 26px;
+                margin: 6px;
+                width: 40px;
+                height: 40px;
+            }
+            
+            .emoji-palette {
+                max-height: 120px;
+            }
+            
+            canvas {
+                width: 280px;
+                height: 280px;
+            }
+            
+            .controls-section {
+                margin-bottom: 15px;
+            }
+            
+            .filter-controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .filter-controls select, 
+            .filter-controls input,
+            .filter-controls button {
+                margin: 5px 0;
+                width: 100%;
+            }
+            
+            .opacity-control {
+                flex-direction: column;
+                width: 100%;
+                margin: 5px 0;
+            }
+            
+            .opacity-control label {
+                margin-bottom: 5px;
+                margin-right: 0;
+            }
+            
+            .opacity-control input {
+                width: 100%;
+            }
+            
+            .brush-controls {
+                flex-direction: column;
+            }
+            
+            .color-palette {
+                max-width: 250px;
+            }
+            
+            .brush-size-control {
+                flex-direction: column;
+                width: 100%;
+                margin: 5px 0;
+            }
+            
+            .brush-size-control label {
+                margin-bottom: 5px;
+                margin-right: 0;
+            }
+            
+            .brush-size-control input {
+                width: 100%;
+            }
+            
+            .tool-option {
+                margin: 0 5px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            button {
+                padding: 8px 12px;
+                font-size: 13px;
+                margin: 3px;
+                min-width: 70px;
+            }
+            
+            .emoji-categories button {
+                font-size: 12px;
+                padding: 8px 10px;
+            }
+            
+            .emoji-item {
+                font-size: 24px;
+                width: 36px;
+                height: 36px;
+                margin: 4px;
+            }
+            
+            .tool-icon {
+                width: 36px;
+                height: 36px;
+                font-size: 18px;
+            }
+            
+            .tool-label {
+                font-size: 11px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="back-btn">
+        <i class="fas fa-arrow-left"></i>
+    </a>
+    
+    <a href="history.html" class="history-btn">
+        <i class="fas fa-history"></i>
+    </a>
+    
+    <div class="header">
+        <div class="logo">
+            <i class="fas fa-palette logo-icon"></i>
+            <h1>Emoji Mixer</h1>
+        </div>
+    </div>
+    
+    <div class="container">
+        <div class="emoji-categories">
+            <button onclick="showCategory('smileys')">
+                <i class="far fa-smile"></i> Smileys
+            </button>
+            <button onclick="showCategory('people')">
+                <i class="fas fa-user"></i> People
+            </button>
+            <button onclick="showCategory('animals')">
+                <i class="fas fa-paw"></i> Animals
+            </button>
+            <button onclick="showCategory('food')">
+                <i class="fas fa-apple-alt"></i> Food
+            </button>
+            <button onclick="showCategory('activities')">
+                <i class="fas fa-futbol"></i> Activities
+            </button>
+            <button onclick="showCategory('objects')">
+                <i class="fas fa-lightbulb"></i> Objects
+            </button>
+            <button onclick="showCategory('symbols')">
+                <i class="fas fa-heart"></i> Symbols
+            </button>
+            <button onclick="showAllEmojis()">
+                <i class="fas fa-list"></i> All
+            </button>
+        </div>
+        
+        <div class="emoji-palette" id="emojiPalette"></div>
+        
+        <div class="selected-emojis" id="selectedEmojis">
+            <p>Selected emojis will appear here</p>
+        </div>
+        
+        <div class="controls-section" id="moveControlsSection">
+            <div class="controls-title" onclick="toggleSection('moveControlsSection')">
+                <i class="fas fa-arrows-alt"></i> Movement Controls
+            </div>
+            <div class="controls-content">
+                <div class="layer-controls">
+                    <button onclick="moveUp()">
+                        <i class="fas fa-arrow-up"></i> Up
+                    </button>
+                    <button onclick="moveDown()">
+                        <i class="fas fa-arrow-down"></i> Down
+                    </button>
+                    <button onclick="moveLeft()">
+                        <i class="fas fa-arrow-left"></i> Left
+                    </button>
+                    <button onclick="moveRight()">
+                        <i class="fas fa-arrow-right"></i> Right
+                    </button>
+                    <button onclick="scaleUp()">
+                        <i class="fas fa-search-plus"></i> Scale Up
+                    </button>
+                    <button onclick="scaleDown()">
+                        <i class="fas fa-search-minus"></i> Scale Down
+                    </button>
+                    <button onclick="rotateLeft()">
+                        <i class="fas fa-undo"></i> Rotate L
+                    </button>
+                    <button onclick="rotateRight()">
+                        <i class="fas fa-redo"></i> Rotate R
+                    </button>
+                    <button onclick="removeSelected()" style="background-color: var(--danger-color);">
+                        <i class="fas fa-trash"></i> Remove
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="controls-section" id="advancedControlsSection">
+            <div class="controls-title" onclick="toggleSection('advancedControlsSection')">
+                <i class="fas fa-sliders-h"></i> Advanced Controls
+            </div>
+            <div class="controls-content">
+                <div class="advanced-controls">
+                    <button onclick="flipHorizontal()">
+                        <i class="fas fa-arrows-alt-h"></i> Flip H
+                    </button>
+                    <button onclick="flipVertical()">
+                        <i class="fas fa-arrows-alt-v"></i> Flip V
+                    </button>
+                    <button onclick="bringToFront()">
+                        <i class="fas fa-level-up-alt"></i> To Front
+                    </button>
+                    <button onclick="sendToBack()">
+                        <i class="fas fa-level-down-alt"></i> To Back
+                    </button>
+                    <button onclick="duplicateEmoji()">
+                        <i class="fas fa-copy"></i> Duplicate
+                    </button>
+                    <div class="opacity-control">
+                        <label for="opacitySlider">Opacity:</label>
+                        <input type="range" id="opacitySlider" min="0" max="100" value="100" onchange="changeOpacity()">
+                    </div>
+                    <button onclick="toggleLock()" id="lockButton">
+                        <i class="fas fa-unlock"></i> Lock
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="controls-section" id="filterControlsSection">
+            <div class="controls-title" onclick="toggleSection('filterControlsSection')">
+                <i class="fas fa-magic"></i> Visual Effects
+            </div>
+            <div class="controls-content">
+                <div class="filter-controls">
+                    <select id="filterSelect" onchange="applyFilter()" class="filter-select">
+                        <option value="none">No Filter</option>
+                        <option value="grayscale">Grayscale</option>
+                        <option value="sepia">Sepia</option>
+                        <option value="invert">Invert</option>
+                        <option value="blur">Blur</option>
+                    </select>
+                    <input type="color" id="colorFilter" onchange="applyColorFilter()">
+                    <button onclick="applyColorFilter()">
+                        <i class="fas fa-fill-drip"></i> Apply Color
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="controls-section" id="brushControlsSection">
+            <div class="controls-title" onclick="toggleSection('brushControlsSection')">
+                <i class="fas fa-paint-brush"></i> Brush Tools
+            </div>
+            <div class="controls-content">
+                <div class="brush-controls">
+                    <div class="tool-options" style="display: flex; gap: 10px;">
+                        <div class="tool-option" onclick="selectTool('brush')" id="brushTool">
+                            <div class="tool-icon">
+                                <i class="fas fa-paint-brush"></i>
+                            </div>
+                            <div class="tool-label">Brush</div>
+                        </div>
+                        <div class="tool-option" onclick="selectTool('eraser')" id="eraserTool">
+                            <div class="tool-icon">
+                                <i class="fas fa-eraser"></i>
+                            </div>
+                            <div class="tool-label">Eraser</div>
+                        </div>
+                        <div class="tool-option selected" onclick="selectTool('move')" id="moveTool">
+                            <div class="tool-icon">
+                                <i class="fas fa-hand-pointer"></i>
+                            </div>
+                            <div class="tool-label">Move</div>
+                        </div>
+                    </div>
+                    
+                    <div class="brush-size-control">
+                        <label for="brushSize">Size:</label>
+                        <input type="range" id="brushSize" min="1" max="30" value="5" onchange="updateBrushSize()">
+                    </div>
+                    
+                    <div class="color-palette">
+                        <div class="color-option selected" style="background-color: #000000;" onclick="selectColor('#000000')"></div>
+                        <div class="color-option" style="background-color: #ffffff;" onclick="selectColor('#ffffff')"></div>
+                        <div class="color-option" style="background-color: #ff0000;" onclick="selectColor('#ff0000')"></div>
+                        <div class="color-option" style="background-color: #00ff00;" onclick="selectColor('#00ff00')"></div>
+                        <div class="color-option" style="background-color: #0000ff;" onclick="selectColor('#0000ff')"></div>
+                        <div class="color-option" style="background-color: #ffff00;" onclick="selectColor('#ffff00')"></div>
+                        <div class="color-option" style="background-color: #ff00ff;" onclick="selectColor('#ff00ff')"></div>
+                        <div class="color-option" style="background-color: #00ffff;" onclick="selectColor('#00ffff')"></div>
+                        <div class="color-option" style="background-color: #ff9900;" onclick="selectColor('#ff9900')"></div>
+                        <div class="color-option" style="background-color: #9900ff;" onclick="selectColor('#9900ff')"></div>
+                    </div>
+                    
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;">
+                        <button onclick="createNewDrawingLayer()">
+                            <i class="fas fa-plus-circle"></i> New Drawing Layer
+                        </button>
+                        <button onclick="finishDrawing()">
+                            <i class="fas fa-check-circle"></i> Finish Drawing
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="canvas-container">
+            <canvas id="emojiCanvas" width="300" height="300"></canvas>
+        </div>
+        
+        <div class="controls">
+            <button onclick="clearCanvas()" style="background-color: var(--warning-color);">
+                <i class="fas fa-trash-alt"></i> Clear Canvas
+            </button>
+            <button onclick="downloadMixedEmoji()" style="background-color: var(--success-color);">
+                <i class="fas fa-download"></i> Download
+            </button>
+        </div>
+    </div>
+
+    <script src="emoji.js"></script>
+    <script>
+        // Canvas setup
+        const canvas = document.getElementById('emojiCanvas');
+        const ctx = canvas.getContext('2d');
+        ctx.fillStyle = 'white';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        
+        // Brush tool variables
+        let currentTool = 'move'; // Default tool is move
+        let isDrawing = false;
+        let brushSize = 5;
+        let brushColor = '#000000';
+        let currentDrawingLayer = null;
+        
+        // Array to store all emoji layers
+        let emojiLayers = [];
+        let selectedLayerIndex = -1;
+        
+        // Common emojis to display initially
+        const commonEmojis = ['😀', '😂', '❤️', '👍', '👋', '🙏', '🔥', '✨', '👀', '😎', '🎉', '👑', '💯', '🌈', '🍕', '🎵', '🚀', '💡', '🌟', '🤔'];
+        
+        // Emoji categories
+        const emojiCategories = {
+            smileys: ['😀', '😃', '😄', '😁', '😆', '😅', '😂', '🤣', '😊', '😇', '🙂', '🙃', '😉', '😌', '😍', '🥰', '😘', '😗', '😙', '😚', '😋', '😛', '😝', '😜', '🤪', '🤨', '🧐', '🤓', '😎', '🤩', '🥳', '😏', '😒', '😞', '😔', '😟', '😕', '🙁', '☹️', '😣', '😖', '😫', '😩', '🥺', '😢', '😭', '😤', '😠', '😡', '🤬', '🤯', '😳', '🥵', '🥶', '😱', '😨', '😰', '😥', '😓', '🤗', '🤔', '🤭', '🤫', '🤥', '😶', '😐', '😑', '😬', '🙄', '😯', '😦', '😧', '😮', '😲', '🥱', '😴', '🤤', '😪', '😵', '🤐', '🥴', '🤢', '🤮', '🤧', '😷', '🤒', '🤕'],
+            people: ['👋', '🤚', '🖐️', '✋', '🖖', '👌', '🤏', '✌️', '🤞', '🤟', '🤘', '🤙', '👈', '👉', '👆', '🖕', '👇', '👍', '👎', '✊', '👊', '🤛', '🤜', '👏', '🙌', '👐', '🤲', '🤝', '🙏', '✍️', '💅', '🤳', '💪', '🦾', '🦿', '🦵', '🦶', '👂', '🦻', '👃', '🧠', '🦷', '🦴', '👀', '👁️', '👅', '👄', '💋', '👶', '🧒', '👦', '👧', '🧑', '👱', '👨', '🧔', '👨‍🦰', '👨‍🦱', '👨‍🦳', '👨‍🦲', '👩', '👩‍🦰', '👩‍🦱', '👩‍🦳', '👩‍🦲', '👱‍♀️', '👱‍♂️', '🧓', '👴', '👵', '🙍', '🙍‍♂️', '🙍‍♀️', '🙎', '🙎‍♂️', '🙎‍♀️', '🙅', '🙅‍♂️', '🙅‍♀️', '🙆', '🙆‍♂️', '🙆‍♀️', '💁', '💁‍♂️', '💁‍♀️', '🙋', '🙋‍♂️', '🙋‍♀️', '🧏', '🧏‍♂️', '🧏‍♀️', '🙇', '🙇‍♂️', '🙇‍♀️', '🤦', '🤦‍♂️', '🤦‍♀️', '🤷', '🤷‍♂️', '🤷‍♀️'],
+            animals: ['🐵', '🐒', '🦍', '🦧', '🐶', '🐕', '🦮', '🐕‍🦺', '🐩', '🐺', '🦊', '🦝', '🐱', '🐈', '🦁', '🐯', '🐅', '🐆', '🐴', '🐎', '🦄', '🦓', '🦌', '🐮', '🐂', '🐃', '🐄', '🐷', '🐖', '🐗', '🐽', '🐏', '🐑', '🐐', '🐪', '🐫', '🦙', '🦒', '🐘', '🦏', '🦛', '🐭', '🐁', '🐀', '🐹', '🐰', '🐇', '🐿️', '🦔', '🦇', '🐻', '🐨', '🐼', '🦥', '🦦', '🦨', '🦘', '🦡', '🐾', '🦃', '🐔', '🐓', '🐣', '🐤', '🐥', '🐦', '🐧', '🕊️', '🦅', '🦆', '🦢', '🦉', '🦩', '🦚', '🦜', '🐸', '🐊', '🐢', '🦎', '🐍', '🐲', '🐉', '🦕', '🦖', '🐳', '🐋', '🐬', '🐟', '🐠', '🐡', '🦈', '🐙', '🐚', '🐌', '🦋', '🐛', '🐜', '🐝', '🐞', '🦗', '🕷️', '🕸️', '🦂', '🦟', '🦠'],
+            food: ['🍎', '🍐', '🍊', '🍋', '🍌', '🍉', '🍇', '🍓', '🍈', '🍒', '🍑', '🥭', '🍍', '🥥', '🥝', '🍅', '🍆', '🥑', '🥦', '🥬', '🥒', '🌶️', '🌽', '🥕', '🧄', '🧅', '🥔', '🍠', '🥐', '🥯', '🍞', '🥖', '🥨', '🧀', '🥚', '🍳', '🧈', '🥞', '🧇', '🥓', '🥩', '🍗', '🍖', '🦴', '🌭', '🍔', '🍟', '🍕', '🥪', '🥙', '🧆', '🌮', '🌯', '🥗', '🥘', '🥫', '🍝', '🍜', '🍲', '🍛', '🍣', '🍱', '🥟', '🦪', '🍤', '🍙', '🍚', '🍘', '🍥', '🥠', '🥮', '🍢', '🍡', '🍧', '🍨', '🍦', '🥧', '🧁', '🍰', '🎂', '🍮', '🍭', '🍬', '🍫', '🍿', '🍩', '🍪', '🌰', '🥜', '🍯', '🥛', '🍼', '☕', '🍵', '🧃', '🥤', '🍶', '🍺', '🍻', '🥂', '🍷', '🥃', '🍸', '🍹', '🧉', '🍾', '🧊', '🥄', '🍴', '🍽️', '🥣', '🥡', '🥢', '🧂'],
+            activities: ['⚽', '🏀', '🏈', '⚾', '🥎', '🎾', '🏐', '🏉', '🥏', '🎱', '🪀', '🏓', '🏸', '🏒', '🏑', '🥍', '🏏', '🥅', '⛳', '🪁', '🏹', '🎣', '🤿', '🥊', '🥋', '🎽', '🛹', '🛷', '⛸️', '🥌', '🎿', '⛷️', '🏂', '🪂', '🏋️', '🏋️‍♂️', '🏋️‍♀️', '🤼', '🤼‍♂️', '🤼‍♀️', '🤸', '🤸‍♂️', '🤸‍♀️', '⛹️', '⛹️‍♂️', '⛹️‍♀️', '🤺', '🤾', '🤾‍♂️', '🤾‍♀️', '🏌️', '🏌️‍♂️', '🏌️‍♀️', '🧘', '🧘‍♂️', '🧘‍♀️', '🏄', '🏄‍♂️', '🏄‍♀️', '🏊', '🏊‍♂️', '🏊‍♀️', '🤽', '🤽‍♂️', '🤽‍♀️', '🚣', '🚣‍♂️', '🚣‍♀️', '🧗', '🧗‍♂️', '🧗‍♀️', '🚵', '🚵‍♂️', '🚵‍♀️', '🚴', '🚴‍♂️', '🚴‍♀️', '🏆', '🥇', '🥈', '🥉', '🏅', '🎖️', '🏵️', '🎗️', '🎫', '🎟️', '🤹', '🤹‍♂️', '🤹‍♀️', '🎭', '🩰', '🎨', '🎬', '🎤', '🎧', '🎼', '🎹', '🥁', '🎷', '🎺', '🎸', '🪕', '🎻', '🎲', '♟️', '🎯', '🎳', '🎮', '🎰', '🧩'],
+            objects: ['🚗', '🚕', '🚙', '🚌', '🚎', '🏎️', '🚓', '🚑', '🚒', '🚐', '🚚', '🚛', '🚜', '🦯', '🦽', '🦼', '🛴', '🚲', '🛵', '🏍️', '🛺', '🚨', '🚔', '🚍', '🚘', '🚖', '🚡', '🚠', '🚟', '🚃', '🚋', '🚞', '🚝', '🚄', '🚅', '🚈', '🚂', '🚆', '🚇', '🚊', '🚉', '✈️', '🛫', '🛬', '🛩️', '💺', '🛰️', '🚀', '🛸', '🚁', '🛶', '⛵', '🚤', '🛥️', '🛳️', '⛴️', '🚢', '⚓', '⛽', '🚧', '🚦', '🚥', '🚏', '🗺️', '🗿', '🗽', '🗼', '🏰', '🏯', '🏟️', '🎡', '🎢', '🎠', '⛲', '⛱️', '🏖️', '🏝️', '🏜️', '🌋', '⛰️', '🏔️', '🗻', '🏕️', '⛺', '🏠', '🏡', '🏘️', '🏚️', '🏗️', '🏭', '🏢', '🏬', '🏣', '🏤', '🏥', '🏦', '🏨', '🏪', '🏫', '🏩', '💒', '🏛️', '⛪', '🕌', '🕍', '🛕', '🕋', '⛩️', '🛤️', '🛣️', '🗾', '🎑', '🏞️', '🌅', '🌄', '🌠', '🎇', '🎆', '🌇', '🌆', '🏙️', '🌃', '🌌', '🌉', '🌁', '💡', '🔦', '🏮', '🪔', '🔋', '💸', '💵', '💴', '💶', '💷', '💰', '💳', '💎', '⚖️', '🔧', '🔨', '⚒️', '🛠️', '⛏️', '🔩', '⚙️', '🧱', '⛓️', '🧲', '🔫', '💣', '🧨', '🪓', '🔪', '🗡️', '⚔️', '🛡️', '🚬', '⚰️', '⚱️', '🏺', '🔮', '📿', '🧿', '💈', '⚗️', '🔭', '🔬', '🕳️', '🩹', '💊', '💉', '🩺', '🩸', '🧬', '🦠', '🧫', '🧪', '🌡️', '🧹', '🧺', '🧻', '🚽', '🚿', '🛁', '🛀', '🧼', '🪒', '🧽', '🧴', '🧵', '🧶', '🧷', '🧮', '🧾', '🧰', '🧲', '🧪', '🧫', '🧬', '🧴', '🧵', '🧶', '🧷', '🧹', '🧺', '🧻', '🧼'],
+            symbols: ['❤️', '🧡', '💛', '💚', '💙', '💜', '🖤', '🤍', '🤎', '💔', '❣️', '💕', '💞', '💓', '💗', '💖', '💘', '💝', '💟', '☮️', '✝️', '☪️', '🕉️', '☸️', '✡️', '🔯', '🕎', '☯️', '☦️', '🛐', '⛎', '♈', '♉', '♊', '♋', '♌', '♍', '♎', '♏', '♐', '♑', '♒', '♓', '🆔', '⚛️', '🉑', '☢️', '☣️', '📴', '📳', '🈶', '🈚', '🈸', '🈺', '🈷️', '✴️', '🆚', '💮', '🉐', '㊙️', '㊗️', '🈴', '🈵', '🈹', '🈲', '🅰️', '🅱️', '🆎', '🆑', '🅾️', '🆘', '❌', '⭕', '🛑', '⛔', '📛', '🚫', '💯', '💢', '♨️', '🚷', '🚯', '🚳', '🚱', '🔞', '📵', '🚭', '❗', '❕', '❓', '❔', '‼️', '⁉️', '🔅', '🔆', '〽️', '⚠️', '🚸', '🔱', '⚜️', '🔰', '♻️', '✅', '🈯', '💹', '❇️', '✳️', '❎', '🌐', '💠', 'Ⓜ️', '🌀', '💤', '🏧', '🚾', '♿', '🅿️', '🈳', '🈂️', '🛂', '🛃', '🛄', '🛅', '🚹', '🚺', '🚼', '🚻', '🚮', '🎦', '📶', '🈁', '🔣', 'ℹ️', '🔤', '🔡', '🔠', '🆖', '🆗', '🆙', '🆒', '🆕', '🆓', '0️⃣', '1️⃣', '2️⃣', '3️⃣', '4️⃣', '5️⃣', '6️⃣', '7️⃣', '8️⃣', '9️⃣', '🔟', '🔢', '#️⃣', '*️⃣', '⏏️', '▶️', '⏸️', '⏺️', '⏭️', '⏮️', '⏩', '⏪', '⏫', '⏬', '◀️', '🔼', '🔽', '➡️', '⬅️', '⬆️', '⬇️', '↗️', '↘️', '↙️', '↖️', '↕️', '↔️', '↪️', '↩️', '⤴️', '⤵️', '🔀', '🔁', '🔂', '🔄', '🔃', '🎵', '🎶', '➕', '➖', '➗', '✖️', '♾️', '💲', '💱', '™️', '©️', '®️', '👁️‍🗨️', '🔚', '🔙', '🔛', '🔝', '🔜']
+        };
+        
+        // Load common emojis when page loads
+        window.onload = function() {
+            loadEmojiPalette(commonEmojis);
+            initSections();
+            addTouchGestures();
+            enhanceMobile();
+            
+            // Set proper canvas size on mobile
+            if (window.innerWidth <= 768) {
+                canvas.width = 280;
+                canvas.height = 280;
+                ctx.fillStyle = 'white';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+            }
+        };
+        
+        // Show all available emojis
+        function showAllEmojis() {
+            // Combine all categories
+            const allEmojis = [].concat(...Object.values(emojiCategories));
+            loadEmojiPalette(allEmojis.slice(0, 100)); // Limit to 100 for performance
+        }
+        
+        // Show emojis by category
+        function showCategory(category) {
+            if (emojiCategories[category]) {
+                loadEmojiPalette(emojiCategories[category]);
+            }
+        }
+        
+        // Function to add emoji to canvas (updated)
+        function addEmojiToCanvas(emoji) {
+            // Create a new layer object
+            const emojiLayer = {
+                emoji: emoji,
+                x: canvas.width / 2,
+                y: canvas.height / 2,
+                scale: 1,
+                rotation: 0,
+                filter: 'none',
+                zIndex: emojiLayers.length,
+                flipH: false,
+                flipV: false,
+                opacity: 1,
+                locked: false
+            };
+            
+            emojiLayers.push(emojiLayer);
+            selectedLayerIndex = emojiLayers.length - 1;
+            
+            updateSelectedEmojisDisplay();
+            redrawCanvas();
+        }
+        
+        // Functions to manipulate selected layer (enhanced)
+        function moveLeft() {
+            if (selectedLayerIndex >= 0 && !emojiLayers[selectedLayerIndex].locked) {
+                emojiLayers[selectedLayerIndex].x -= 10;
+                redrawCanvas();
+            }
+        }
+        
+        function moveRight() {
+            if (selectedLayerIndex >= 0 && !emojiLayers[selectedLayerIndex].locked) {
+                emojiLayers[selectedLayerIndex].x += 10;
+                redrawCanvas();
+            }
+        }
+        
+        function rotateLeft() {
+            if (selectedLayerIndex >= 0 && !emojiLayers[selectedLayerIndex].locked) {
+                emojiLayers[selectedLayerIndex].rotation -= 15;
+                redrawCanvas();
+            }
+        }
+        
+        function rotateRight() {
+            if (selectedLayerIndex >= 0 && !emojiLayers[selectedLayerIndex].locked) {
+                emojiLayers[selectedLayerIndex].rotation += 15;
+                redrawCanvas();
+            }
+        }
+        
+        // Apply filter to selected emoji
+        function applyFilter() {
+            if (selectedLayerIndex >= 0) {
+                const filterSelect = document.getElementById('filterSelect');
+                emojiLayers[selectedLayerIndex].filter = filterSelect.value;
+                redrawCanvas();
+            }
+        }
+        
+        // Apply color filter to selected emoji
+        function applyColorFilter() {
+            if (selectedLayerIndex >= 0) {
+                const colorFilter = document.getElementById('colorFilter').value;
+                emojiLayers[selectedLayerIndex].colorFilter = colorFilter;
+                redrawCanvas();
+            }
+        }
+        
+        // Function to redraw the canvas (enhanced)
+        function redrawCanvas() {
+            // Clear canvas
+            ctx.fillStyle = 'white';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Sort layers by z-index
+            const sortedLayers = [...emojiLayers].sort((a, b) => a.zIndex - b.zIndex);
+            
+            // Draw each layer
+            sortedLayers.forEach(layer => {
+                ctx.save();
+                
+                // Apply transformations
+                ctx.translate(layer.x, layer.y);
+                ctx.rotate(layer.rotation * Math.PI / 180);
+                
+                // Apply flips
+                const scaleX = layer.flipH ? -1 : 1;
+                const scaleY = layer.flipV ? -1 : 1;
+                ctx.scale(scaleX, scaleY);
+                
+                // Apply opacity
+                ctx.globalAlpha = layer.opacity;
+                
+                // Apply filters
+                if (layer.filter && layer.filter !== 'none') {
+                    ctx.filter = layer.filter === 'grayscale' ? 'grayscale(100%)' : 
+                                  layer.filter === 'sepia' ? 'sepia(100%)' : 
+                                  layer.filter === 'invert' ? 'invert(100%)' : 
+                                  layer.filter === 'blur' ? 'blur(2px)' : 'none';
+                }
+                
+                // Create temporary canvas to draw emoji
+                const tempCanvas = document.createElement('canvas');
+                tempCanvas.width = 100;
+                tempCanvas.height = 100;
+                const tempCtx = tempCanvas.getContext('2d');
+                tempCtx.font = '72px serif';
+                tempCtx.textAlign = 'center';
+                tempCtx.textBaseline = 'middle';
+                
+                // Apply color overlay if specified
+                if (layer.colorFilter) {
+                    tempCtx.fillStyle = layer.colorFilter;
+                    tempCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
+                    tempCtx.globalCompositeOperation = 'destination-in';
+                }
+                
+                tempCtx.fillText(layer.emoji, 50, 50);
+                
+                // Draw the emoji on the main canvas
+                const size = 100 * layer.scale;
+                ctx.drawImage(
+                    tempCanvas,
+                    -size / 2,
+                    -size / 2,
+                    size,
+                    size
+                );
+                
+                ctx.restore();
+            });
+        }
+        
+        // Function to update the display of selected emojis
+        function updateSelectedEmojisDisplay() {
+            const selectedEmojisDiv = document.getElementById('selectedEmojis');
+            if (emojiLayers.length === 0) {
+                selectedEmojisDiv.innerHTML = '<p>Selected emojis will appear here</p>';
+                return;
+            }
+            
+            let html = '';
+            emojiLayers.forEach((layer, index) => {
+                const isSelected = index === selectedLayerIndex;
+                html += `<span style="font-size: 24px; margin: 5px; ${isSelected ? 'border: 2px solid #00bcd4; padding: 2px;' : ''}" 
+                          onclick="selectLayer(${index})">${layer.emoji}</span>`;
+            });
+            
+            selectedEmojisDiv.innerHTML = html;
+        }
+        
+        // Function to select a layer
+        function selectLayer(index) {
+            selectedLayerIndex = index;
+            updateSelectedEmojisDisplay();
+        }
+        
+        // Functions to manipulate selected layer
+        function moveUp() {
+            if (selectedLayerIndex >= 0 && !emojiLayers[selectedLayerIndex].locked) {
+                emojiLayers[selectedLayerIndex].y -= 10;
+                redrawCanvas();
+            }
+        }
+        
+        function moveDown() {
+            if (selectedLayerIndex >= 0 && !emojiLayers[selectedLayerIndex].locked) {
+                emojiLayers[selectedLayerIndex].y += 10;
+                redrawCanvas();
+            }
+        }
+        
+        function scaleUp() {
+            if (selectedLayerIndex >= 0 && !emojiLayers[selectedLayerIndex].locked) {
+                emojiLayers[selectedLayerIndex].scale += 0.1;
+                redrawCanvas();
+            }
+        }
+        
+        function scaleDown() {
+            if (selectedLayerIndex >= 0 && !emojiLayers[selectedLayerIndex].locked && emojiLayers[selectedLayerIndex].scale > 0.3) {
+                emojiLayers[selectedLayerIndex].scale -= 0.1;
+                redrawCanvas();
+            }
+        }
+        
+        function removeSelected() {
+            if (selectedLayerIndex >= 0) {
+                emojiLayers.splice(selectedLayerIndex, 1);
+                if (emojiLayers.length > 0) {
+                    selectedLayerIndex = emojiLayers.length - 1;
+                } else {
+                    selectedLayerIndex = -1;
+                }
+                updateSelectedEmojisDisplay();
+                redrawCanvas();
+            }
+        }
+        
+        // Function to clear the canvas
+        function clearCanvas() {
+            emojiLayers = [];
+            selectedLayerIndex = -1;
+            updateSelectedEmojisDisplay();
+            
+            ctx.fillStyle = 'white';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+        }
+        
+        // Function to download the mixed emoji
+        function downloadMixedEmoji() {
+            const downloadLink = document.createElement('a');
+            downloadLink.href = canvas.toDataURL('image/png');
+            downloadLink.download = 'mixed-emoji.png';
+            document.body.appendChild(downloadLink);
+            downloadLink.click();
+            document.body.removeChild(downloadLink);
+        }
+        
+        // Function to go back to home page
+        function goToHome() {
+            window.location.href = "index.html";
+        }
+        
+        // Function to go to history page
+        function goToHistory() {
+            window.location.href = "history.html";
+        }
+        
+        // Add canvas drag and move functionality for selected emoji
+        let isDragging = false;
+        let dragStartX, dragStartY;
+        
+        canvas.addEventListener('mousedown', function(e) {
+            const rect = canvas.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            if (currentTool === 'move') {
+                // Original move tool behavior
+                // Check if click is on an emoji
+                for (let i = emojiLayers.length - 1; i >= 0; i--) {
+                    const layer = emojiLayers[i];
+                    const distance = Math.sqrt(
+                        Math.pow(x - layer.x, 2) + 
+                        Math.pow(y - layer.y, 2)
+                    );
+                    
+                    if (distance < 50 * layer.scale) {
+                        selectedLayerIndex = i;
+                        updateSelectedEmojisDisplay();
+                        
+                        // Only allow dragging if not locked
+                        if (!layer.locked) {
+                            isDragging = true;
+                            dragStartX = x;
+                            dragStartY = y;
+                        }
+                        
+                        // Update lock button state
+                        const lockButton = document.getElementById('lockButton');
+                        if (layer.locked) {
+                            lockButton.textContent = '🔒 Unlock';
+                        } else {
+                            lockButton.textContent = '🔓 Lock';
+                        }
+                        
+                        // Update opacity slider value
+                        document.getElementById('opacitySlider').value = layer.opacity * 100;
+                        
+                        break;
+                    }
+                }
+            } else if ((currentTool === 'brush' || currentTool === 'eraser') && currentDrawingLayer) {
+                // Start drawing
+                isDrawing = true;
+                
+                const drawCtx = currentDrawingLayer.getContext('2d');
+                drawCtx.lineJoin = 'round';
+                drawCtx.lineCap = 'round';
+                drawCtx.lineWidth = brushSize;
+                
+                if (currentTool === 'brush') {
+                    drawCtx.strokeStyle = brushColor;
+                    drawCtx.globalCompositeOperation = 'source-over';
+                } else {
+                    // Eraser - use white color
+                    drawCtx.strokeStyle = '#ffffff';
+                    drawCtx.globalCompositeOperation = 'destination-out';
+                }
+                
+                drawCtx.beginPath();
+                drawCtx.moveTo(x, y);
+            }
+        });
+        
+        canvas.addEventListener('mousemove', function(e) {
+            const rect = canvas.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            if (isDragging && selectedLayerIndex >= 0 && currentTool === 'move') {
+                // Original move behavior
+                emojiLayers[selectedLayerIndex].x += (x - dragStartX);
+                emojiLayers[selectedLayerIndex].y += (y - dragStartY);
+                
+                dragStartX = x;
+                dragStartY = y;
+                
+                redrawCanvas();
+            } else if (isDrawing && (currentTool === 'brush' || currentTool === 'eraser') && currentDrawingLayer) {
+                // Continue drawing
+                const drawCtx = currentDrawingLayer.getContext('2d');
+                drawCtx.lineTo(x, y);
+                drawCtx.stroke();
+                
+                // Draw temporary preview on main canvas
+                redrawCanvasWithCurrentDrawing();
+            }
+        });
+        
+        canvas.addEventListener('mouseup', function() {
+            if (isDrawing && (currentTool === 'brush' || currentTool === 'eraser')) {
+                isDrawing = false;
+            } else {
+                isDragging = false;
+            }
+        });
+        
+        canvas.addEventListener('mouseleave', function() {
+            isDrawing = false;
+            isDragging = false;
+        });
+        
+        // Update redrawCanvas function to handle custom drawings
+        function redrawCanvasWithCurrentDrawing() {
+            // First do normal redraw
+            redrawCanvas();
+            
+            // Then draw current drawing layer if any
+            if (currentDrawingLayer) {
+                ctx.drawImage(currentDrawingLayer, 0, 0);
+            }
+        }
+        
+        // Update redrawCanvas function to handle custom drawings in layers
+        function redrawCanvas() {
+            // Clear canvas
+            ctx.fillStyle = 'white';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Sort layers by z-index
+            const sortedLayers = [...emojiLayers].sort((a, b) => a.zIndex - b.zIndex);
+            
+            // Draw each layer
+            sortedLayers.forEach(layer => {
+                ctx.save();
+                
+                // Apply transformations
+                ctx.translate(layer.x, layer.y);
+                ctx.rotate(layer.rotation * Math.PI / 180);
+                
+                // Apply flips
+                const scaleX = layer.flipH ? -1 : 1;
+                const scaleY = layer.flipV ? -1 : 1;
+                ctx.scale(scaleX, scaleY);
+                
+                // Apply opacity
+                ctx.globalAlpha = layer.opacity;
+                
+                // Apply filters
+                if (layer.filter && layer.filter !== 'none') {
+                    ctx.filter = layer.filter === 'grayscale' ? 'grayscale(100%)' : 
+                                  layer.filter === 'sepia' ? 'sepia(100%)' : 
+                                  layer.filter === 'invert' ? 'invert(100%)' : 
+                                  layer.filter === 'blur' ? 'blur(2px)' : 'none';
+                }
+                
+                if (layer.customDrawing) {
+                    // This is a custom drawing layer
+                    const size = 100 * layer.scale;
+                    ctx.drawImage(
+                        layer.customDrawing,
+                        -size / 2,
+                        -size / 2,
+                        size,
+                        size
+                    );
+                } else {
+                    // This is a regular emoji layer
+                    // Create temporary canvas to draw emoji
+                    const tempCanvas = document.createElement('canvas');
+                    tempCanvas.width = 100;
+                    tempCanvas.height = 100;
+                    const tempCtx = tempCanvas.getContext('2d');
+                    tempCtx.font = '72px serif';
+                    tempCtx.textAlign = 'center';
+                    tempCtx.textBaseline = 'middle';
+                    
+                    // Apply color overlay if specified
+                    if (layer.colorFilter) {
+                        tempCtx.fillStyle = layer.colorFilter;
+                        tempCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
+                        tempCtx.globalCompositeOperation = 'destination-in';
+                    }
+                    
+                    tempCtx.fillText(layer.emoji, 50, 50);
+                    
+                    // Draw the emoji on the main canvas
+                    const size = 100 * layer.scale;
+                    ctx.drawImage(
+                        tempCanvas,
+                        -size / 2,
+                        -size / 2,
+                        size,
+                        size
+                    );
+                }
+                
+                ctx.restore();
+            });
+        }
+        
+        // Update the display of selected emojis to include custom drawings
+        function updateSelectedEmojisDisplay() {
+            const selectedEmojisDiv = document.getElementById('selectedEmojis');
+            if (emojiLayers.length === 0) {
+                selectedEmojisDiv.innerHTML = '<p>Selected emojis will appear here</p>';
+                return;
+            }
+            
+            let html = '';
+            emojiLayers.forEach((layer, index) => {
+                const isSelected = index === selectedLayerIndex;
+                let displayContent;
+                
+                if (layer.customDrawing) {
+                    // For custom drawings, show a brush icon
+                    displayContent = '🖌️';
+                } else {
+                    // For regular emojis, show the emoji
+                    displayContent = layer.emoji;
+                }
+                
+                html += `<span style="font-size: 24px; margin: 5px; ${isSelected ? 'border: 2px solid #00bcd4; padding: 2px;' : ''}" 
+                          onclick="selectLayer(${index})">${displayContent}</span>`;
+            });
+            
+            selectedEmojisDiv.innerHTML = html;
+        }
+        
+        // Extend touch gestures for drawing
+        function addTouchGestures() {
+            let touchStartX, touchStartY;
+            let initialScale, initialRotation;
+            let touchDistance = 0;
+            
+            // Touch start event
+            canvas.addEventListener('touchstart', function(e) {
+                if (currentTool === 'move') {
+                    // Original move tool behavior
+                    if (e.touches.length === 1) {
+                        // Single touch for selecting and moving
+                        e.preventDefault();
+                        const touch = e.touches[0];
+                        const rect = canvas.getBoundingClientRect();
+                        const x = touch.clientX - rect.left;
+                        const y = touch.clientY - rect.top;
+                        
+                        // Check if touch is on an emoji
+                        for (let i = emojiLayers.length - 1; i >= 0; i--) {
+                            const layer = emojiLayers[i];
+                            const distance = Math.sqrt(
+                                Math.pow(x - layer.x, 2) + 
+                                Math.pow(y - layer.y, 2)
+                            );
+                            
+                            if (distance < 50 * layer.scale) {
+                                selectedLayerIndex = i;
+                                updateSelectedEmojisDisplay();
+                                
+                                if (!layer.locked) {
+                                    isDragging = true;
+                                    dragStartX = x;
+                                    dragStartY = y;
+                                }
+                                
+                                const lockButton = document.getElementById('lockButton');
+                                if (layer.locked) {
+                                    lockButton.textContent = '🔒 Unlock';
+                                } else {
+                                    lockButton.textContent = '🔓 Lock';
+                                }
+                                
+                                document.getElementById('opacitySlider').value = layer.opacity * 100;
+                                break;
+                            }
+                        }
+                    } else if (e.touches.length === 2 && selectedLayerIndex >= 0 && !emojiLayers[selectedLayerIndex].locked) {
+                        // Two finger touch for pinch zoom and rotation
+                        e.preventDefault();
+                        const touch1 = e.touches[0];
+                        const touch2 = e.touches[1];
+                        
+                        // Calculate initial distance between two fingers
+                        touchDistance = Math.sqrt(
+                            Math.pow(touch2.clientX - touch1.clientX, 2) + 
+                            Math.pow(touch2.clientY - touch1.clientY, 2)
+                        );
+                        
+                        // Store initial scale and rotation
+                        initialScale = emojiLayers[selectedLayerIndex].scale;
+                        initialRotation = emojiLayers[selectedLayerIndex].rotation;
+                    }
+                } else if ((currentTool === 'brush' || currentTool === 'eraser') && currentDrawingLayer) {
+                    // Start drawing
+                    e.preventDefault();
+                    const touch = e.touches[0];
+                    const rect = canvas.getBoundingClientRect();
+                    const x = touch.clientX - rect.left;
+                    const y = touch.clientY - rect.top;
+                    
+                    isDrawing = true;
+                    
+                    const drawCtx = currentDrawingLayer.getContext('2d');
+                    drawCtx.lineJoin = 'round';
+                    drawCtx.lineCap = 'round';
+                    drawCtx.lineWidth = brushSize;
+                    
+                    if (currentTool === 'brush') {
+                        drawCtx.strokeStyle = brushColor;
+                        drawCtx.globalCompositeOperation = 'source-over';
+                    } else {
+                        // Eraser - use transparent
+                        drawCtx.strokeStyle = '#ffffff';
+                        drawCtx.globalCompositeOperation = 'destination-out';
+                    }
+                    
+                    drawCtx.beginPath();
+                    drawCtx.moveTo(x, y);
+                }
+            });
+            
+            // Touch move event
+            canvas.addEventListener('touchmove', function(e) {
+                if (currentTool === 'move') {
+                    // Original move tool behavior
+                    if (e.touches.length === 1 && isDragging && selectedLayerIndex >= 0 && !emojiLayers[selectedLayerIndex].locked) {
+                        // Single touch move for dragging
+                        e.preventDefault();
+                        const touch = e.touches[0];
+                        const rect = canvas.getBoundingClientRect();
+                        const x = touch.clientX - rect.left;
+                        const y = touch.clientY - rect.top;
+                        
+                        emojiLayers[selectedLayerIndex].x += (x - dragStartX);
+                        emojiLayers[selectedLayerIndex].y += (y - dragStartY);
+                        
+                        dragStartX = x;
+                        dragStartY = y;
+                        
+                        redrawCanvas();
+                    } else if (e.touches.length === 2 && selectedLayerIndex >= 0 && !emojiLayers[selectedLayerIndex].locked) {
+                        // Two finger touch move for pinch zoom and rotation
+                        e.preventDefault();
+                        const touch1 = e.touches[0];
+                        const touch2 = e.touches[1];
+                        
+                        // Calculate new distance between fingers
+                        const newDistance = Math.sqrt(
+                            Math.pow(touch2.clientX - touch1.clientX, 2) + 
+                            Math.pow(touch2.clientY - touch1.clientY, 2)
+                        );
+                        
+                        // Calculate scale factor
+                        const scaleFactor = newDistance / touchDistance;
+                        emojiLayers[selectedLayerIndex].scale = initialScale * scaleFactor;
+                        
+                        // Limit minimum scale
+                        if (emojiLayers[selectedLayerIndex].scale < 0.3) {
+                            emojiLayers[selectedLayerIndex].scale = 0.3;
+                        }
+                        
+                        // Calculate rotation angle
+                        const angle1 = Math.atan2(touch1.clientY - touch2.clientY, touch1.clientX - touch2.clientX);
+                        const angle2 = Math.atan2(
+                            e.touches[0].clientY - e.touches[1].clientY,
+                            e.touches[0].clientX - e.touches[1].clientX
+                        );
+                        const angleDiff = (angle2 - angle1) * 180 / Math.PI;
+                        
+                        // Apply rotation if significant change
+                        if (Math.abs(angleDiff) > 5) {
+                            emojiLayers[selectedLayerIndex].rotation = initialRotation + angleDiff;
+                        }
+                        
+                        redrawCanvas();
+                    }
+                } else if (isDrawing && (currentTool === 'brush' || currentTool === 'eraser') && currentDrawingLayer) {
+                    // Continue drawing
+                    e.preventDefault();
+                    const touch = e.touches[0];
+                    const rect = canvas.getBoundingClientRect();
+                    const x = touch.clientX - rect.left;
+                    const y = touch.clientY - rect.top;
+                    
+                    const drawCtx = currentDrawingLayer.getContext('2d');
+                    drawCtx.lineTo(x, y);
+                    drawCtx.stroke();
+                    
+                    // Draw temporary preview on main canvas
+                    redrawCanvasWithCurrentDrawing();
+                }
+            });
+            
+            // Touch end event
+            canvas.addEventListener('touchend', function() {
+                isDrawing = false;
+                isDragging = false;
+            });
+            
+            // Prevent default touch actions on canvas
+            canvas.addEventListener('touchcancel', function() {
+                isDrawing = false;
+                isDragging = false;
+            });
+        }
+        
+        // Function to toggle collapsible sections
+        function toggleSection(sectionId) {
+            const section = document.getElementById(sectionId);
+            section.classList.toggle('collapsed');
+            
+            // Update the arrow in the title
+            const title = section.querySelector('.controls-title');
+            if (section.classList.contains('collapsed')) {
+                title.innerHTML = title.innerHTML.replace('▾', '▸');
+            } else {
+                title.innerHTML = title.innerHTML.replace('▸', '▾');
+            }
+        }
+        
+        // Initialize sections (expanded on desktop, collapsed on mobile)
+        function initSections() {
+            const isMobile = window.innerWidth <= 768;
+            const sections = document.querySelectorAll('.controls-section');
+            
+            sections.forEach(section => {
+                if (isMobile) {
+                    section.classList.add('collapsed');
+                    const title = section.querySelector('.controls-title');
+                    title.innerHTML = title.innerHTML.replace('▾', '▸');
+                }
+            });
+        }
+        
+        // Brush tool functions
+        function selectTool(tool) {
+            currentTool = tool;
+            
+            // Update tool selection UI
+            document.querySelectorAll('.tool-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            
+            document.getElementById(tool + 'Tool').classList.add('selected');
+            
+            // Update cursor based on tool
+            if (tool === 'brush' || tool === 'eraser') {
+                canvas.style.cursor = 'crosshair';
+            } else {
+                canvas.style.cursor = 'default';
+            }
+        }
+        
+        function updateBrushSize() {
+            brushSize = document.getElementById('brushSize').value;
+        }
+        
+        function selectColor(color) {
+            brushColor = color;
+            
+            // Update color selection UI
+            document.querySelectorAll('.color-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            
+            document.querySelectorAll('.color-option').forEach(option => {
+                if (option.style.backgroundColor === convertHexToRGB(color)) {
+                    option.classList.add('selected');
+                }
+            });
+        }
+        
+        function convertHexToRGB(hex) {
+            // Remove the hash (#) if it exists
+            hex = hex.replace('#', '');
+            
+            // Parse the hex values to RGB
+            const r = parseInt(hex.substring(0, 2), 16);
+            const g = parseInt(hex.substring(2, 4), 16);
+            const b = parseInt(hex.substring(4, 6), 16);
+            
+            return `rgb(${r}, ${g}, ${b})`;
+        }
+        
+        function createNewDrawingLayer() {
+            // Create a new transparent canvas for drawing
+            currentDrawingLayer = document.createElement('canvas');
+            currentDrawingLayer.width = canvas.width;
+            currentDrawingLayer.height = canvas.height;
+            
+            // Set drawing tool as active
+            selectTool('brush');
+        }
+        
+        function finishDrawing() {
+            if (!currentDrawingLayer) return;
+            
+            // Create a layer from the drawing
+            const drawingLayerCtx = currentDrawingLayer.getContext('2d');
+            
+            // Create a custom emoji layer
+            const customLayer = {
+                customDrawing: currentDrawingLayer,
+                x: canvas.width / 2,
+                y: canvas.height / 2,
+                scale: 1,
+                rotation: 0,
+                filter: 'none',
+                zIndex: emojiLayers.length,
+                flipH: false,
+                flipV: false,
+                opacity: 1,
+                locked: false
+            };
+            
+            emojiLayers.push(customLayer);
+            selectedLayerIndex = emojiLayers.length - 1;
+            
+            // Reset drawing canvas
+            currentDrawingLayer = null;
+            
+            // Set back to move tool
+            selectTool('move');
+            
+            updateSelectedEmojisDisplay();
+            redrawCanvas();
+        }
+        
+        // Enhance the emoji mixer for mobile
+        function enhanceMobile() {
+            // Double tap to select/deselect emoji
+            let lastTap = 0;
+            canvas.addEventListener('touchend', function(e) {
+                const currentTime = new Date().getTime();
+                const tapLength = currentTime - lastTap;
+                
+                if (tapLength < 300 && tapLength > 0) {
+                    // Double tap detected
+                    e.preventDefault();
+                    if (selectedLayerIndex >= 0) {
+                        selectedLayerIndex = -1; // Deselect
+                    } else {
+                        // Try to select an emoji
+                        const touch = e.changedTouches[0];
+                        const rect = canvas.getBoundingClientRect();
+                        const x = touch.clientX - rect.left;
+                        const y = touch.clientY - rect.top;
+                        
+                        for (let i = emojiLayers.length - 1; i >= 0; i--) {
+                            const layer = emojiLayers[i];
+                            const distance = Math.sqrt(
+                                Math.pow(x - layer.x, 2) + 
+                                Math.pow(y - layer.y, 2)
+                            );
+                            
+                            if (distance < 50 * layer.scale) {
+                                selectedLayerIndex = i;
+                                break;
+                            }
+                        }
+                    }
+                    
+                    updateSelectedEmojisDisplay();
+                }
+                
+                lastTap = currentTime;
+            });
+        }
+        
+        // Function to load emojis into the palette
+        function loadEmojiPalette(emojis) {
+            const palette = document.getElementById('emojiPalette');
+            palette.innerHTML = '';
+            
+            emojis.forEach(emoji => {
+                const emojiItem = document.createElement('div');
+                emojiItem.className = 'emoji-item';
+                emojiItem.textContent = emoji;
+                emojiItem.onclick = function() {
+                    addEmojiToCanvas(emoji);
+                };
+                palette.appendChild(emojiItem);
+            });
+        }
+        
+        // New functions for additional editing tools
+        
+        // Flip horizontally
+        function flipHorizontal() {
+            if (selectedLayerIndex >= 0 && !emojiLayers[selectedLayerIndex].locked) {
+                emojiLayers[selectedLayerIndex].flipH = !emojiLayers[selectedLayerIndex].flipH;
+                redrawCanvas();
+            }
+        }
+        
+        // Flip vertically
+        function flipVertical() {
+            if (selectedLayerIndex >= 0 && !emojiLayers[selectedLayerIndex].locked) {
+                emojiLayers[selectedLayerIndex].flipV = !emojiLayers[selectedLayerIndex].flipV;
+                redrawCanvas();
+            }
+        }
+        
+        // Bring selected emoji to front
+        function bringToFront() {
+            if (selectedLayerIndex >= 0) {
+                const maxZ = emojiLayers.reduce((max, layer) => Math.max(max, layer.zIndex), 0);
+                emojiLayers[selectedLayerIndex].zIndex = maxZ + 1;
+                redrawCanvas();
+            }
+        }
+        
+        // Send selected emoji to back
+        function sendToBack() {
+            if (selectedLayerIndex >= 0) {
+                const minZ = emojiLayers.reduce((min, layer) => Math.min(min, layer.zIndex), 0);
+                emojiLayers[selectedLayerIndex].zIndex = minZ - 1;
+                redrawCanvas();
+            }
+        }
+        
+        // Duplicate selected emoji
+        function duplicateEmoji() {
+            if (selectedLayerIndex >= 0) {
+                const originalLayer = emojiLayers[selectedLayerIndex];
+                const duplicateLayer = { ...originalLayer };
+                
+                // Offset the duplicate slightly
+                duplicateLayer.x += 20;
+                duplicateLayer.y += 20;
+                duplicateLayer.zIndex = emojiLayers.length;
+                
+                emojiLayers.push(duplicateLayer);
+                selectedLayerIndex = emojiLayers.length - 1;
+                
+                updateSelectedEmojisDisplay();
+                redrawCanvas();
+            }
+        }
+        
+        // Change opacity of selected emoji
+        function changeOpacity() {
+            if (selectedLayerIndex >= 0 && !emojiLayers[selectedLayerIndex].locked) {
+                const opacity = document.getElementById('opacitySlider').value / 100;
+                emojiLayers[selectedLayerIndex].opacity = opacity;
+                redrawCanvas();
+            }
+        }
+        
+        // Toggle lock/unlock status of selected emoji
+        function toggleLock() {
+            if (selectedLayerIndex >= 0) {
+                const lockButton = document.getElementById('lockButton');
+                emojiLayers[selectedLayerIndex].locked = !emojiLayers[selectedLayerIndex].locked;
+                
+                if (emojiLayers[selectedLayerIndex].locked) {
+                    lockButton.textContent = '🔒 Unlock';
+                } else {
+                    lockButton.textContent = '🔓 Lock';
+                }
+            }
+        }
+        
+        // Function to mix the selected emojis
+        function mixEmojis() {
+            if (selectedEmojis.length < 2) {
+                alert('Please select at least 2 emojis to mix');
+                return;
+            }
+            
+            // Clear canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = 'white';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Reset emoji layers
+            emojiLayers = [];
+            
+            // Add each selected emoji as a layer
+            selectedEmojis.forEach((emoji, index) => {
+                emojiLayers.push({
+                    emoji: emoji,
+                    x: canvas.width / 2 + (index - selectedEmojis.length / 2) * 40,
+                    y: canvas.height / 2,
+                    scale: 1,
+                    rotation: 0,
+                    opacity: 1,
+                    zIndex: index + 1,
+                    locked: false,
+                    flipH: false,
+                    flipV: false,
+                    filter: 'none',
+                    colorFilter: null
+                });
+            });
+            
+            // Add to history
+            const historyEntry = {
+                emoji1: selectedEmojis[0],
+                emoji2: selectedEmojis[1],
+                result: selectedEmojis.join(''),
+                timestamp: new Date().toISOString()
+            };
+            addToMixerHistory(historyEntry);
+            
+            // Update canvas
+            redrawCanvas();
+            
+            // Update selected emojis display
+            updateSelectedEmojisDisplay();
+            
+            selectedLayerIndex = emojiLayers.length - 1;
+        }
+        
+        // Function to add to mixer history
+        function addToMixerHistory(entry) {
+            // Get existing history or initialize empty array
+            let history = JSON.parse(localStorage.getItem("mixerHistory") || "[]");
+            
+            // Add new entry
+            history.push(entry);
+            
+            // Save back to localStorage
+            localStorage.setItem("mixerHistory", JSON.stringify(history));
+        }
+    </script>
+</body>
+</html> 

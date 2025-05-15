@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memory Match Game</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            text-align: center;
+            background-color: #e3f2fd;
+            padding-top: 60px;
+            margin: 0;
+            min-height: 100vh;
+            background-image: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+        }
+        
+        h1 {
+            color: #1976d2;
+            font-size: 36px;
+            margin-bottom: 20px;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .game-container {
+            width: 90%;
+            max-width: 600px;
+            margin: 0 auto 40px auto;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            padding: 25px;
+            position: relative;
+        }
+        
+        .memory-board {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            max-width: 500px;
+            margin: 30px auto;
+        }
+        
+        .memory-card {
+            height: 80px;
+            background-color: #1976d2;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            cursor: pointer;
+            transition: transform 0.3s ease, background-color 0.3s ease;
+            transform-style: preserve-3d;
+            position: relative;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .memory-card:hover {
+            transform: scale(1.05);
+        }
+        
+        .memory-card.flipped {
+            transform: rotateY(180deg);
+            background-color: white;
+            pointer-events: none;
+        }
+        
+        .memory-card.matched {
+            background-color: #4CAF50;
+            transform: rotateY(180deg);
+            pointer-events: none;
+            animation: pulse 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(76, 175, 80, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0); }
+        }
+        
+        .memory-front, .memory-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+        }
+        
+        .memory-front {
+            transform: rotateY(180deg);
+        }
+        
+        .memory-stats {
+            display: flex;
+            justify-content: space-around;
+            max-width: 500px;
+            margin: 20px auto;
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+        }
+        
+        .memory-stats div {
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .high-score {
+            margin-top: 10px;
+            font-weight: bold;
+            color: #1976d2;
+            background-color: #e3f2fd;
+            padding: 10px 20px;
+            border-radius: 20px;
+            display: inline-block;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .new-high-score {
+            color: #FF5722;
+            animation: bounce 1s infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        
+        .restart-btn {
+            background-color: #1976d2;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 30px;
+            cursor: pointer;
+            margin-top: 20px;
+            font-size: 16px;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        
+        .restart-btn:hover {
+            background-color: #1565c0;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+        }
+        
+        .back-btn {
+            position: absolute;
+            top: -15px;
+            left: 10px;
+            background-color: white;
+            color: #1976d2;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: transform 0.2s ease;
+        }
+        
+        .back-btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        /* Mobile styles */
+        @media (max-width: 600px) {
+            .memory-board {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 8px;
+            }
+            
+            .memory-card {
+                height: 70px;
+                font-size: 24px;
+            }
+            
+            .game-container {
+                padding: 15px;
+                width: 95%;
+            }
+            
+            h1 {
+                font-size: 28px;
+            }
+            
+            .memory-stats {
+                flex-direction: column;
+                gap: 10px;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Emoji Memory Match</h1>
+    
+    <div class="game-container">
+        <button class="back-btn" onclick="goBack()">← Back to Games</button>
+        
+        <p>Match pairs of emojis by flipping the cards. Try to find all matches in as few moves as possible!</p>
+        
+        <div class="memory-board" id="memoryBoard"></div>
+        
+        <div class="memory-stats">
+            <div>Moves: <span id="moveCount">0</span></div>
+            <div>Matches: <span id="matchCount">0</span>/8</div>
+            <div>Time: <span id="timeElapsed">0</span>s</div>
+        </div>
+        
+        <div class="high-score" id="memoryHighScore">High Score: 0</div>
+        
+        <button class="restart-btn" onclick="initMemoryGame()">Restart Game</button>
+    </div>
+    
+    <script>
+        let memoryInitialized = false;
+        let memoryCards = [];
+        let hasFlippedCard = false;
+        let lockBoard = false;
+        let firstCard, secondCard;
+        let moves = 0;
+        let matches = 0;
+        let memoryTimer;
+        let memorySeconds = 0;
+        let memoryHighScore = 0; // Store high score
+        
+        function initMemoryGame() {
+            clearInterval(memoryTimer);
+            memorySeconds = 0;
+            document.getElementById('timeElapsed').textContent = "0";
+            moves = 0;
+            matches = 0;
+            document.getElementById('moveCount').textContent = "0";
+            document.getElementById('matchCount').textContent = "0";
+            
+            // Load high score
+            loadMemoryHighScore();
+            
+            // Emoji pairs for the game
+            const emojis = ['😀', '🎮', '🚀', '🌈', '🍕', '🐱', '🎵', '🏆'];
+            memoryCards = [...emojis, ...emojis];
+            shuffleArray(memoryCards);
+            
+            // Create board
+            const memoryBoard = document.getElementById('memoryBoard');
+            memoryBoard.innerHTML = '';
+            
+            memoryCards.forEach((emoji, index) => {
+                const card = document.createElement('div');
+                card.classList.add('memory-card');
+                card.dataset.index = index;
+                card.dataset.emoji = emoji;
+                
+                const front = document.createElement('div');
+                front.classList.add('memory-front');
+                front.textContent = emoji;
+                
+                const back = document.createElement('div');
+                back.classList.add('memory-back');
+                
+                card.appendChild(front);
+                card.appendChild(back);
+                card.addEventListener('click', flipCard);
+                
+                memoryBoard.appendChild(card);
+            });
+            
+            // Start timer
+            memoryTimer = setInterval(() => {
+                memorySeconds++;
+                document.getElementById('timeElapsed').textContent = memorySeconds;
+            }, 1000);
+            
+            memoryInitialized = true;
+        }
+        
+        function flipCard() {
+            if (lockBoard) return;
+            if (this === firstCard) return;
+            
+            this.classList.add('flipped');
+            
+            if (!hasFlippedCard) {
+                // First click
+                hasFlippedCard = true;
+                firstCard = this;
+                return;
+            }
+            
+            // Second click
+            secondCard = this;
+            moves++;
+            document.getElementById('moveCount').textContent = moves;
+            
+            checkForMatch();
+        }
+        
+        function checkForMatch() {
+            const isMatch = firstCard.dataset.emoji === secondCard.dataset.emoji;
+            
+            if (isMatch) {
+                matches++;
+                document.getElementById('matchCount').textContent = matches;
+                disableCards();
+                if (matches === 8) {
+                    // Game completed
+                    clearInterval(memoryTimer);
+                    
+                    // Calculate score: more moves and more time = lower score
+                    const score = Math.round(1000 * (8 / moves) * (100 / memorySeconds));
+                    
+                    setTimeout(() => {
+                        alert(`Congratulations! You completed the game in ${moves} moves and ${memorySeconds} seconds!`);
+                        saveMemoryGameResult(moves, memorySeconds, score);
+                        
+                        // Check for high score
+                        if (score > memoryHighScore) {
+                            memoryHighScore = score;
+                            saveMemoryHighScore(score);
+                            document.getElementById('memoryHighScore').textContent = `High Score: ${memoryHighScore}`;
+                            document.getElementById('memoryHighScore').classList.add('new-high-score');
+                            
+                            setTimeout(() => {
+                                document.getElementById('memoryHighScore').classList.remove('new-high-score');
+                            }, 3000);
+                        }
+                    }, 500);
+                }
+            } else {
+                unflipCards();
+            }
+        }
+        
+        function disableCards() {
+            firstCard.classList.add('matched');
+            secondCard.classList.add('matched');
+            
+            resetBoard();
+        }
+        
+        function unflipCards() {
+            lockBoard = true;
+            
+            setTimeout(() => {
+                firstCard.classList.remove('flipped');
+                secondCard.classList.remove('flipped');
+                
+                resetBoard();
+            }, 1000);
+        }
+        
+        function resetBoard() {
+            [hasFlippedCard, lockBoard] = [false, false];
+            [firstCard, secondCard] = [null, null];
+        }
+        
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+        
+        function saveMemoryGameResult(moves, time, score) {
+            const historyEntry = {
+                game: "Memory Match",
+                result: `Completed in ${moves} moves and ${time} seconds`,
+                timestamp: new Date().toISOString(),
+                score: score
+            };
+            
+            saveGameHistory(historyEntry);
+        }
+        
+        function saveGameHistory(entry) {
+            // Get existing history or initialize empty array
+            let gameHistory = JSON.parse(localStorage.getItem("emojiGameHistory") || "[]");
+            
+            // Add new entry
+            gameHistory.push(entry);
+            
+            // Save back to localStorage
+            localStorage.setItem("emojiGameHistory", JSON.stringify(gameHistory));
+        }
+        
+        function loadMemoryHighScore() {
+            memoryHighScore = parseInt(localStorage.getItem("memoryHighScore") || "0");
+            document.getElementById('memoryHighScore').textContent = `High Score: ${memoryHighScore}`;
+        }
+        
+        function saveMemoryHighScore(score) {
+            localStorage.setItem("memoryHighScore", score.toString());
+        }
+        
+        function goBack() {
+            window.location.href = "index.html";
+        }
+        
+        // Initialize memory game on page load
+        window.onload = function() {
+            initMemoryGame();
+        };
+    </script>
+</body>
+</html> 

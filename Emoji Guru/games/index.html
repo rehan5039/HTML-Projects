@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emoji Games</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            text-align: center;
+            background-color: #f0f9ff;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-image: linear-gradient(135deg, #f0f9ff 0%, #e9f4ff 100%);
+        }
+        
+        .page-title {
+            color: #00bcd4;
+            font-size: 48px;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.03); }
+            100% { transform: scale(1); }
+        }
+        
+        .games-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+            max-width: 1000px;
+            margin: 20px auto;
+        }
+        
+        .game-card {
+            width: 280px;
+            height: 320px;
+            background-color: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            cursor: pointer;
+        }
+        
+        .game-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+        }
+        
+        .game-image {
+            height: 180px;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 80px;
+            background: linear-gradient(45deg, #f3f9ff, #e6f7ff);
+        }
+        
+        .memory-game .game-image {
+            background: linear-gradient(45deg, #e3f2fd, #bbdefb);
+        }
+        
+        .quiz-game .game-image {
+            background: linear-gradient(45deg, #f3e5f5, #e1bee7);
+        }
+        
+        .reaction-game .game-image {
+            background: linear-gradient(45deg, #e0f7fa, #b2ebf2);
+        }
+        
+        .typing-game .game-image {
+            background: linear-gradient(45deg, #e8f5e9, #c8e6c9);
+        }
+        
+        .sequence-game .game-image {
+            background: linear-gradient(45deg, #fff3e0, #ffe0b2);
+        }
+        
+        .word-game .game-image {
+            background: linear-gradient(45deg, #ffebee, #ffcdd2);
+        }
+        
+        .game-details {
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .game-title {
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        
+        .game-description {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.4;
+        }
+        
+        .nav-buttons {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            display: flex;
+            gap: 15px;
+        }
+        
+        .nav-button {
+            background-color: white;
+            color: #00bcd4;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-size: 16px;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .nav-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+        
+        .nav-button i {
+            font-size: 20px;
+        }
+        
+        .high-score-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #ff5722;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+            opacity: 0; /* Initially hidden */
+            transition: opacity 0.3s ease;
+        }
+        
+        .game-card:hover .high-score-badge {
+            opacity: 1; /* Show on hover */
+        }
+        
+        /* For mobile screens */
+        @media (max-width: 768px) {
+            .games-container {
+                flex-direction: column;
+                gap: 20px;
+                padding: 0 15px;
+            }
+            
+            .game-card {
+                width: 100%;
+                max-width: 350px;
+                height: auto;
+            }
+            
+            .game-image {
+                height: 150px;
+            }
+            
+            .page-title {
+                font-size: 36px;
+                margin-top: 70px;
+            }
+            
+            .nav-buttons {
+                top: 10px;
+                left: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="nav-buttons">
+        <button class="nav-button" onclick="goToHome()">
+            <span>🏠</span> Home
+        </button>
+        <button class="nav-button" onclick="goToHistory()">
+            <span>📜</span> History
+        </button>
+    </div>
+    
+    <h1 class="page-title">Emoji Games</h1>
+    
+    <div class="games-container">
+        <div class="game-card memory-game" onclick="goToMemoryGame()">
+            <div class="game-image">
+                🎴
+            </div>
+            <div class="game-details">
+                <h2 class="game-title">Memory Match</h2>
+                <p class="game-description">Flip cards to find matching emojis. Test your memory skills and compete for the best score!</p>
+            </div>
+            <div class="high-score-badge" id="memoryHighScoreBadge">
+                High Score: 0
+            </div>
+        </div>
+        
+        <div class="game-card quiz-game" onclick="goToQuizGame()">
+            <div class="game-image">
+                🤔
+            </div>
+            <div class="game-details">
+                <h2 class="game-title">Emoji Quiz</h2>
+                <p class="game-description">Test your emoji knowledge! Can you identify what these emojis mean? Challenge yourself!</p>
+            </div>
+            <div class="high-score-badge" id="quizHighScoreBadge">
+                High Score: 0
+            </div>
+        </div>
+        
+        <div class="game-card reaction-game" onclick="goToReactionGame()">
+            <div class="game-image">
+                🎯
+            </div>
+            <div class="game-details">
+                <h2 class="game-title">Reaction Game</h2>
+                <p class="game-description">Test your reflexes! Click on target emojis as quickly as possible to rack up points.</p>
+            </div>
+            <div class="high-score-badge" id="reactionHighScoreBadge">
+                High Score: 0
+            </div>
+        </div>
+        
+        <div class="game-card typing-game" onclick="goToTypingGame()">
+            <div class="game-image">
+                ⌨️
+            </div>
+            <div class="game-details">
+                <h2 class="game-title">Emoji Typing Race</h2>
+                <p class="game-description">How fast can you type? Convert emoji to text descriptions against the clock!</p>
+            </div>
+            <div class="high-score-badge" id="typingHighScoreBadge">
+                High Score: 0
+            </div>
+        </div>
+        
+        <div class="game-card sequence-game" onclick="goToSequenceGame()">
+            <div class="game-image">
+                📋
+            </div>
+            <div class="game-details">
+                <h2 class="game-title">Emoji Sequence</h2>
+                <p class="game-description">Remember and repeat emoji patterns of increasing difficulty. How far can you go?</p>
+            </div>
+            <div class="high-score-badge" id="sequenceHighScoreBadge">
+                High Score: 0
+            </div>
+        </div>
+        
+        <div class="game-card word-game" onclick="goToWordGame()">
+            <div class="game-image">
+                🔤
+            </div>
+            <div class="game-details">
+                <h2 class="game-title">Emoji Word Match</h2>
+                <p class="game-description">Match the word with the correct emoji. Be quick and accurate!</p>
+            </div>
+            <div class="high-score-badge" id="wordHighScoreBadge">
+                High Score: 0
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Navigation functions
+        function goToHome() {
+            window.location.href = "../index.html";
+        }
+        
+        function goToHistory() {
+            window.location.href = "../history.html";
+        }
+        
+        function goToMemoryGame() {
+            window.location.href = "memory.html";
+        }
+        
+        function goToQuizGame() {
+            window.location.href = "quiz.html";
+        }
+        
+        function goToReactionGame() {
+            window.location.href = "reaction.html";
+        }
+        
+        function goToTypingGame() {
+            window.location.href = "typing.html";
+        }
+        
+        function goToSequenceGame() {
+            window.location.href = "sequence.html";
+        }
+        
+        function goToWordGame() {
+            window.location.href = "word.html";
+        }
+        
+        // Load high scores
+        window.onload = function() {
+            // Memory game high score
+            const memoryHighScore = localStorage.getItem("memoryHighScore") || "0";
+            document.getElementById('memoryHighScoreBadge').textContent = `High Score: ${memoryHighScore}`;
+            
+            // Quiz game high score
+            const quizHighScore = localStorage.getItem("quizHighScore") || "0";
+            document.getElementById('quizHighScoreBadge').textContent = `High Score: ${quizHighScore}`;
+            
+            // Reaction game high score
+            const reactionHighScore = localStorage.getItem("reactionHighScore") || "0";
+            document.getElementById('reactionHighScoreBadge').textContent = `High Score: ${reactionHighScore}`;
+            
+            // Typing game high score
+            const typingHighScore = localStorage.getItem("typingHighScore") || "0";
+            document.getElementById('typingHighScoreBadge').textContent = `High Score: ${typingHighScore}`;
+            
+            // Sequence game high score
+            const sequenceHighScore = localStorage.getItem("sequenceHighScore") || "0";
+            document.getElementById('sequenceHighScoreBadge').textContent = `High Score: ${sequenceHighScore}`;
+            
+            // Word game high score
+            const wordHighScore = localStorage.getItem("wordHighScore") || "0";
+            document.getElementById('wordHighScoreBadge').textContent = `High Score: ${wordHighScore}`;
+        };
+    </script>
+</body>
+</html> 

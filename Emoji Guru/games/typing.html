@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emoji Typing Race</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            text-align: center;
+            background-color: #e8f5e9;
+            padding-top: 60px;
+            margin: 0;
+            min-height: 100vh;
+            background-image: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+        }
+        
+        h1 {
+            color: #4caf50;
+            font-size: 36px;
+            margin-bottom: 20px;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .game-container {
+            width: 90%;
+            max-width: 600px;
+            margin: 0 auto 40px auto;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            padding: 25px;
+            position: relative;
+        }
+        
+        .typing-area {
+            background-color: #f9f9f9;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .emoji-display {
+            font-size: 70px;
+            margin: 20px 0;
+            min-height: 90px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .emoji-description {
+            color: #555;
+            font-size: 16px;
+            font-style: italic;
+            margin-bottom: 20px;
+            min-height: 20px;
+        }
+        
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            box-sizing: border-box;
+            margin-top: 10px;
+            transition: border-color 0.3s;
+        }
+        
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #4caf50;
+            box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
+        }
+        
+        .typing-stats {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        
+        .typing-stats div {
+            font-weight: bold;
+        }
+        
+        .progress-bar {
+            height: 10px;
+            background-color: #e0e0e0;
+            border-radius: 5px;
+            margin: 15px 0;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background-color: #4caf50;
+            width: 0%;
+            transition: width 0.3s;
+        }
+        
+        .feedback {
+            font-weight: bold;
+            min-height: 24px;
+            margin: 10px 0;
+        }
+        
+        .feedback.correct {
+            color: #4caf50;
+        }
+        
+        .feedback.incorrect {
+            color: #f44336;
+        }
+        
+        .start-btn, .submit-btn {
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            margin: 0 5px;
+        }
+        
+        .start-btn:hover, .submit-btn:hover {
+            background-color: #388e3c;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+        }
+        
+        .start-btn:disabled, .submit-btn:disabled {
+            background-color: #a5d6a7;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .high-score {
+            margin-top: 10px;
+            font-weight: bold;
+            color: #4caf50;
+            background-color: #e8f5e9;
+            padding: 10px 20px;
+            border-radius: 20px;
+            display: inline-block;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .back-btn {
+            position: absolute;
+            top: -15px;
+            left: 10px;
+            background-color: white;
+            color: #4caf50;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: transform 0.2s ease;
+        }
+        
+        .back-btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        /* Result popup */
+        .result-popup {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+        
+        .result-content {
+            background-color: white;
+            margin: 15% auto;
+            padding: 20px;
+            border-radius: 15px;
+            width: 80%;
+            max-width: 400px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            animation: slideDown 0.5s;
+        }
+        
+        @keyframes slideDown {
+            from { transform: translateY(-300px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        .result-content h2 {
+            color: #4caf50;
+            margin-top: 0;
+        }
+        
+        .result-content button {
+            margin-top: 20px;
+        }
+        
+        .result-stats {
+            margin: 20px 0;
+            font-size: 18px;
+            line-height: 1.5;
+        }
+        
+        /* Mobile styles */
+        @media (max-width: 600px) {
+            .typing-stats {
+                flex-direction: column;
+                gap: 10px;
+                align-items: center;
+            }
+            
+            .game-container {
+                padding: 15px;
+            }
+            
+            h1 {
+                font-size: 28px;
+            }
+            
+            .emoji-display {
+                font-size: 50px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Emoji Typing Race</h1>
+    
+    <div class="game-container">
+        <button class="back-btn" onclick="goBack()">← Back to Games</button>
+        
+        <p>How quickly can you type the descriptions of these emojis? Race against the clock!</p>
+        
+        <div class="typing-area">
+            <div class="emoji-display" id="emojiDisplay">⌨️</div>
+            <div class="emoji-description" id="emojiDescription">When the game starts, type the description of the emoji shown above</div>
+            <input type="text" id="userInput" placeholder="Type the emoji description here..." disabled>
+            <div class="feedback" id="feedback"></div>
+        </div>
+        
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+        
+        <div class="typing-stats">
+            <div>Score: <span id="typingScore">0</span></div>
+            <div>Time Left: <span id="typingTime">60</span>s</div>
+            <div>Round: <span id="roundNumber">0</span>/10</div>
+        </div>
+        
+        <div class="high-score" id="typingHighScore">High Score: 0</div>
+        
+        <button class="start-btn" id="startTypingBtn" onclick="startTypingGame()">Start Game</button>
+        <button class="submit-btn" id="submitBtn" onclick="checkAnswer()" disabled>Submit</button>
+    </div>
+    
+    <div class="result-popup" id="resultPopup">
+        <div class="result-content">
+            <h2>Game Over!</h2>
+            <div class="result-stats" id="resultStats"></div>
+            <button class="start-btn" onclick="closeResultAndRestart()">Play Again</button>
+        </div>
+    </div>
+    
+    <script>
+        // Game variables
+        let typingTimer;
+        let typingTimeLeft = 60;
+        let currentRound = 0;
+        let totalRounds = 10;
+        let typingScore = 0;
+        let gameRunning = false;
+        let typingHighScore = 0;
+        let emojiData = [];
+        let currentEmoji = {};
+        
+        // DOM elements
+        const emojiDisplay = document.getElementById('emojiDisplay');
+        const emojiDescription = document.getElementById('emojiDescription');
+        const userInput = document.getElementById('userInput');
+        const feedback = document.getElementById('feedback');
+        const progressFill = document.getElementById('progressFill');
+        const scoreDisplay = document.getElementById('typingScore');
+        const timeDisplay = document.getElementById('typingTime');
+        const roundDisplay = document.getElementById('roundNumber');
+        const startBtn = document.getElementById('startTypingBtn');
+        const submitBtn = document.getElementById('submitBtn');
+        const highScoreDisplay = document.getElementById('typingHighScore');
+        const resultPopup = document.getElementById('resultPopup');
+        const resultStats = document.getElementById('resultStats');
+        
+        // Initialize emoji data
+        function initEmojiData() {
+            emojiData = [
+                { emoji: "😀", description: "grinning face" },
+                { emoji: "😂", description: "face with tears of joy" },
+                { emoji: "😊", description: "smiling face with smiling eyes" },
+                { emoji: "😍", description: "smiling face with heart eyes" },
+                { emoji: "🙄", description: "face with rolling eyes" },
+                { emoji: "😴", description: "sleeping face" },
+                { emoji: "🤔", description: "thinking face" },
+                { emoji: "😎", description: "smiling face with sunglasses" },
+                { emoji: "😭", description: "loudly crying face" },
+                { emoji: "😡", description: "pouting face" },
+                { emoji: "👍", description: "thumbs up" },
+                { emoji: "👎", description: "thumbs down" },
+                { emoji: "👏", description: "clapping hands" },
+                { emoji: "🙏", description: "folded hands" },
+                { emoji: "🎉", description: "party popper" },
+                { emoji: "🎁", description: "wrapped gift" },
+                { emoji: "🔥", description: "fire" },
+                { emoji: "⭐", description: "star" },
+                { emoji: "❤️", description: "red heart" },
+                { emoji: "🍕", description: "pizza" }
+            ];
+            shuffleArray(emojiData);
+        }
+        
+        // Start the typing game
+        function startTypingGame() {
+            // Load high score
+            loadTypingHighScore();
+            
+            // Initialize game variables
+            typingTimeLeft = 60;
+            currentRound = 0;
+            typingScore = 0;
+            gameRunning = true;
+            
+            // Initialize emoji data
+            initEmojiData();
+            
+            // Update UI
+            scoreDisplay.textContent = typingScore;
+            timeDisplay.textContent = typingTimeLeft;
+            roundDisplay.textContent = `0/${totalRounds}`;
+            progressFill.style.width = '0%';
+            
+            // Enable input and submit
+            userInput.disabled = false;
+            submitBtn.disabled = false;
+            startBtn.disabled = true;
+            
+            // Clear feedback
+            feedback.textContent = '';
+            feedback.className = 'feedback';
+            
+            // Load first emoji
+            nextEmoji();
+            
+            // Start timer
+            typingTimer = setInterval(updateTimer, 1000);
+            
+            // Focus on input
+            userInput.focus();
+        }
+        
+        // Update the timer
+        function updateTimer() {
+            typingTimeLeft--;
+            timeDisplay.textContent = typingTimeLeft;
+            
+            if (typingTimeLeft <= 0) {
+                endTypingGame();
+            }
+        }
+        
+        // Load the next emoji
+        function nextEmoji() {
+            if (currentRound >= totalRounds) {
+                endTypingGame();
+                return;
+            }
+            
+            currentRound++;
+            roundDisplay.textContent = `${currentRound}/${totalRounds}`;
+            progressFill.style.width = `${(currentRound / totalRounds) * 100}%`;
+            
+            // Get next emoji
+            currentEmoji = emojiData[currentRound - 1];
+            emojiDisplay.textContent = currentEmoji.emoji;
+            emojiDescription.textContent = '';
+            
+            // Clear input and feedback
+            userInput.value = '';
+            feedback.textContent = '';
+            feedback.className = 'feedback';
+            
+            // Focus on input
+            userInput.focus();
+        }
+        
+        // Check the user's answer
+        function checkAnswer() {
+            if (!gameRunning) return;
+            
+            const userAnswer = userInput.value.trim().toLowerCase();
+            const correctAnswer = currentEmoji.description.toLowerCase();
+            
+            if (userAnswer === correctAnswer) {
+                // Correct answer
+                feedback.textContent = 'Correct!';
+                feedback.className = 'feedback correct';
+                
+                // Award points (more points for faster answers)
+                const pointsEarned = 10 + Math.min(10, Math.floor(typingTimeLeft / 6));
+                typingScore += pointsEarned;
+                scoreDisplay.textContent = typingScore;
+                
+                // Add bonus time (1 second)
+                typingTimeLeft += 1;
+                timeDisplay.textContent = typingTimeLeft;
+                
+                // Save the result
+                saveTypingResult(currentEmoji.emoji, true);
+                
+                // Move to next emoji
+                setTimeout(nextEmoji, 1000);
+            } else {
+                // Incorrect answer
+                feedback.textContent = `Incorrect! The correct answer is "${correctAnswer}"`;
+                feedback.className = 'feedback incorrect';
+                
+                // Penalty (no time deduction to keep the game flowing)
+                saveTypingResult(currentEmoji.emoji, false);
+                
+                // Show the correct answer briefly
+                emojiDescription.textContent = correctAnswer;
+                
+                // Move to next emoji after a delay
+                setTimeout(nextEmoji, 2000);
+            }
+        }
+        
+        // End the typing game
+        function endTypingGame() {
+            clearInterval(typingTimer);
+            gameRunning = false;
+            
+            // Disable input and submit
+            userInput.disabled = true;
+            submitBtn.disabled = true;
+            startBtn.disabled = false;
+            
+            // Check for high score
+            if (typingScore > typingHighScore) {
+                typingHighScore = typingScore;
+                saveTypingHighScore(typingScore);
+                highScoreDisplay.textContent = `High Score: ${typingHighScore}`;
+            }
+            
+            // Show results
+            resultStats.innerHTML = `
+                <p>Your score: ${typingScore}</p>
+                <p>Rounds completed: ${currentRound} / ${totalRounds}</p>
+                <p>Time remaining: ${typingTimeLeft}s</p>
+            `;
+            
+            resultPopup.style.display = 'block';
+        }
+        
+        // Close result popup and restart
+        function closeResultAndRestart() {
+            resultPopup.style.display = 'none';
+            startTypingGame();
+        }
+        
+        // Save typing result
+        function saveTypingResult(emoji, isCorrect) {
+            const historyEntry = {
+                game: "Emoji Typing Race",
+                result: `${emoji} - ${isCorrect ? "Correct" : "Incorrect"}`,
+                timestamp: new Date().toISOString(),
+                score: isCorrect ? 10 : 0
+            };
+            
+            saveGameHistory(historyEntry);
+        }
+        
+        // Save game history
+        function saveGameHistory(entry) {
+            // Get existing history or initialize empty array
+            let gameHistory = JSON.parse(localStorage.getItem("emojiGameHistory") || "[]");
+            
+            // Add new entry
+            gameHistory.push(entry);
+            
+            // Save back to localStorage
+            localStorage.setItem("emojiGameHistory", JSON.stringify(gameHistory));
+        }
+        
+        // Load typing high score
+        function loadTypingHighScore() {
+            typingHighScore = parseInt(localStorage.getItem("typingHighScore") || "0");
+            highScoreDisplay.textContent = `High Score: ${typingHighScore}`;
+        }
+        
+        // Save typing high score
+        function saveTypingHighScore(score) {
+            localStorage.setItem("typingHighScore", score.toString());
+        }
+        
+        // Fisher-Yates shuffle algorithm
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+        
+        // Navigation
+        function goBack() {
+            window.location.href = "index.html";
+        }
+        
+        // Handle Enter key press
+        userInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                checkAnswer();
+            }
+        });
+        
+        // Initialize on page load
+        window.onload = function() {
+            loadTypingHighScore();
+        };
+    </script>
+</body>
+</html> 

@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Translator - Emoji Guru Pro</title>
+    <!-- Add modern fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Add FontAwesome for better icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #00bcd4;
+            --primary-dark: #0097a7;
+            --secondary-color: #E91E63;
+            --text-color: #333333;
+            --light-bg: #f7f7f7;
+            --card-bg: #ffffff;
+            --success-color: #4CAF50;
+            --warning-color: #FF9800;
+            --danger-color: #FF5252;
+            --info-color: #2196F3;
+            --border-radius: 8px;
+            --box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            text-align: center;
+            background-color: var(--light-bg);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .header {
+            width: 100%;
+            padding: 20px 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            border-bottom-left-radius: 20px;
+            border-bottom-right-radius: 20px;
+            margin-bottom: 30px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-icon {
+            font-size: 32px;
+            color: var(--primary-color);
+        }
+
+        h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            color: var(--primary-color);
+            font-size: 32px;
+            position: relative;
+            margin-bottom: 0;
+        }
+
+        h1::after {
+            content: "Pro";
+            position: absolute;
+            top: -5px;
+            right: -40px;
+            background-color: var(--secondary-color);
+            color: white;
+            font-size: 14px;
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+
+        .main-container {
+            width: 90%;
+            max-width: 800px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 80px;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 16px 20px;
+            font-family: 'Nunito', sans-serif;
+            font-size: 16px;
+            border: 2px solid transparent;
+            border-radius: var(--border-radius);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+            background-color: var(--card-bg);
+            transition: var(--transition);
+            height: 150px;
+            resize: vertical;
+            margin-bottom: 20px;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 6px 15px rgba(108, 99, 255, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        button {
+            padding: 14px 28px;
+            font-size: 16px;
+            font-weight: 600;
+            font-family: 'Montserrat', sans-serif;
+            cursor: pointer;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        button:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        button:active {
+            transform: translateY(-1px);
+        }
+
+        .back-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            z-index: 10;
+            transition: var(--transition);
+        }
+
+        .back-btn:hover {
+            background-color: var(--primary-dark);
+            transform: scale(1.1);
+        }
+
+        .history-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background-color: var(--secondary-color);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            z-index: 10;
+            transition: var(--transition);
+        }
+
+        .history-btn:hover {
+            background-color: #c2185b;
+            transform: scale(1.1);
+        }
+
+        .result-container {
+            width: 100%;
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 25px;
+            margin-top: 30px;
+            box-shadow: var(--box-shadow);
+            position: relative;
+            animation: fadeIn 0.5s ease-in-out;
+            overflow: hidden;
+        }
+
+        .result-container::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background-color: var(--secondary-color);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        #translationResult {
+            font-size: 28px;
+            line-height: 1.5;
+            margin-bottom: 20px;
+            min-height: 50px;
+            word-break: break-word;
+        }
+
+        .loader {
+            display: none;
+            margin: 20px auto;
+        }
+
+        .loading-spinner {
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid var(--primary-color);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+
+        .loading-text {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .examples {
+            margin-top: 40px;
+            text-align: left;
+            width: 100%;
+            background-color: var(--card-bg);
+            padding: 20px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+        }
+
+        .examples h3 {
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .examples p {
+            margin: 12px 0;
+            font-size: 15px;
+            cursor: pointer;
+            transition: var(--transition);
+            padding: 10px 15px;
+            border-radius: var(--border-radius);
+        }
+
+        .examples p:hover {
+            background-color: rgba(0, 188, 212, 0.1);
+            transform: translateX(5px);
+        }
+
+        .examples p:before {
+            content: "⚡";
+            margin-right: 10px;
+            font-size: 18px;
+        }
+
+        .copy-button {
+            background-color: var(--info-color);
+            font-size: 14px;
+            padding: 10px 15px;
+        }
+
+        .copy-button:hover {
+            background-color: #0d8bf2;
+        }
+
+        /* Mobile styles */
+        @media (max-width: 768px) {
+            .back-btn, .history-btn {
+                width: 40px;
+                height: 40px;
+                top: 15px;
+            }
+
+            .back-btn {
+                left: 15px;
+            }
+
+            .history-btn {
+                right: 15px;
+            }
+
+            h1 {
+                font-size: 26px;
+            }
+
+            h1::after {
+                right: -35px;
+                font-size: 12px;
+            }
+
+            #translationResult {
+                font-size: 24px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .main-container {
+                width: 95%;
+            }
+
+            .result-container {
+                padding: 20px;
+            }
+
+            #translationResult {
+                font-size: 20px;
+            }
+
+            button {
+                padding: 12px 20px;
+                font-size: 15px;
+            }
+
+            .examples p {
+                font-size: 14px;
+                padding: 8px 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="back-btn">
+        <i class="fas fa-arrow-left"></i>
+    </a>
+    
+    <a href="history.html" class="history-btn">
+        <i class="fas fa-history"></i>
+    </a>
+    
+    <div class="header">
+        <div class="logo">
+            <i class="fas fa-language logo-icon"></i>
+            <h1>Translator</h1>
+        </div>
+    </div>
+
+    <div class="main-container">
+        <textarea id="inputText" placeholder="Enter your text here to translate it into emojis..."></textarea>
+        
+        <div class="button-group">
+            <button onclick="translateToEmoji()">
+                <i class="fas fa-magic"></i> Translate to Emoji
+            </button>
+            <button onclick="clearText()" style="background-color: var(--warning-color);">
+                <i class="fas fa-eraser"></i> Clear
+            </button>
+        </div>
+        
+        <div class="loader" id="loadingSpinner">
+            <div class="loading-spinner"></div>
+            <p class="loading-text">Translating your text...</p>
+        </div>
+        
+        <div class="result-container" id="resultContainer" style="display: none;">
+            <div id="translationResult"></div>
+            <button class="copy-button" onclick="copyResult()">
+                <i class="fas fa-copy"></i> Copy Result
+            </button>
+        </div>
+        
+        <div class="examples">
+            <h3><i class="fas fa-lightbulb"></i> Example Sentences</h3>
+            <p>I'm going to the beach today with my friends. We'll have a picnic and swim.</p>
+            <p>The cat jumped over the fence and chased after the birds.</p>
+            <p>I love pizza and ice cream for dinner on Friday nights.</p>
+            <p>It's raining outside so I'll stay home and read a book.</p>
+        </div>
+    </div>
+
+    <script>
+        const API_KEY = "AIzaSyCh-T5vR2o8oDUn0T2tTA2cXMe0WNXEaf0";
+        // Variable to store AI provider (ai1 = Google Gemini, ai2 = Backup API)
+        let aiProvider = "ai1";
+        
+        // Load AI provider setting when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load AI provider setting from localStorage (default to ai1 if not set)
+            aiProvider = localStorage.getItem("aiProvider") || "ai1";
+            
+            const examples = document.querySelectorAll('.examples p');
+            examples.forEach(example => {
+                example.addEventListener('click', function() {
+                    document.getElementById('inputText').value = this.textContent.replace('⚡ ', '');
+                    // Scroll to input area
+                    document.getElementById('inputText').scrollIntoView({ behavior: 'smooth' });
+                    // Focus on input
+                    document.getElementById('inputText').focus();
+                });
+            });
+        });
+        
+        // Function to filter out non-emoji characters
+        function filterEmojis(text) {
+            // Match all emoji characters
+            const emojiRegex = /[\p{Emoji}]/gu;
+            const emojis = text.match(emojiRegex);
+            
+            // If no emojis found, return original text
+            if (!emojis) return text;
+            
+            // Join all found emojis
+            return emojis.join('');
+        }
+        
+        function translateToEmoji() {
+            const inputText = document.getElementById('inputText').value.trim();
+            
+            if (!inputText) {
+                alert('Please enter some text to translate');
+                return;
+            }
+            
+            // Show loading spinner
+            document.getElementById('loadingSpinner').style.display = 'block';
+            document.getElementById('resultContainer').style.display = 'none';
+            
+            // Build the prompt
+            const prompt = `Convert the following text to a sequence of emojis. Replace each word and concept with appropriate emojis:
+
+"${inputText}"
+
+Return ONLY the emoji sequence without any explanations, text, quotes, or additional characters. 
+Each word or concept should be represented by an emoji. For example:
+"I love dogs" → "❤️🐕"
+"Going to the beach" → "🏖️🌊👙☀️"`;
+            
+            // Check which AI provider to use
+            if (aiProvider === "ai1") {
+                queryGeminiAI(prompt, inputText);
+            } else {
+                queryBackupAI(prompt, inputText);
+            }
+        }
+        
+        // Function to query Google Gemini API
+        function queryGeminiAI(prompt, inputText) {
+            // Call the Gemini API
+            fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${API_KEY}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    contents: [{
+                        parts: [{ text: prompt }]
+                    }]
+                })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                // Extract the emoji translation from the response
+                let emojiTranslation = '';
+                if (data.candidates && data.candidates[0].content && data.candidates[0].content.parts) {
+                    emojiTranslation = data.candidates[0].content.parts[0].text;
+                    processResponse(emojiTranslation, inputText);
+                } else {
+                    throw new Error('Unexpected API response format');
+                }
+            })
+            .catch(error => {
+                handleApiError(error);
+            });
+        }
+        
+        // Function to query Backup AI API
+        function queryBackupAI(prompt, inputText) {
+            fetch("https://backend.buildpicoapps.com/aero/run/llm-api?pk=v1-Z0FBQUFBQm5IZkJDMlNyYUVUTjIyZVN3UWFNX3BFTU85SWpCM2NUMUk3T2dxejhLSzBhNWNMMXNzZlp3c09BSTR6YW1Sc1BmdGNTVk1GY0liT1RoWDZZX1lNZlZ0Z1dqd3c9PQ==", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    prompt: prompt
+                })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                // Extract response from backup API
+                let emojiTranslation = data.response || data.text || "No response from backup API";
+                processResponse(emojiTranslation, inputText);
+            })
+            .catch(error => {
+                handleApiError(error);
+            });
+        }
+        
+        // Process API response 
+        function processResponse(emojiTranslation, inputText) {
+            // Remove any explanation text but keep all emojis
+            // Don't strip out emojis that might be separated by spaces or other characters
+            emojiTranslation = emojiTranslation.trim();
+            
+            // If the response contains non-emoji characters (like explanations), filter them
+            if (emojiTranslation.length > 0 && !/^[\p{Emoji}\s]+$/u.test(emojiTranslation)) {
+                // Try to extract just the emojis
+                const filteredEmojis = filterEmojis(emojiTranslation);
+                if (filteredEmojis.length > 0) {
+                    emojiTranslation = filteredEmojis;
+                }
+            }
+            
+            // Save to translation history
+            addToTranslateHistory(inputText, emojiTranslation);
+            
+            // Display the result
+            document.getElementById('translationResult').textContent = emojiTranslation;
+            document.getElementById('resultContainer').style.display = 'block';
+            
+            // Hide loading spinner
+            document.getElementById('loadingSpinner').style.display = 'none';
+        }
+        
+        // Handle API errors
+        function handleApiError(error) {
+            console.error('Error:', error);
+            document.getElementById('translationResult').textContent = 'Sorry, there was an error translating your text. Please try again.';
+            document.getElementById('resultContainer').style.display = 'block';
+            document.getElementById('loadingSpinner').style.display = 'none';
+        }
+        
+        function clearText() {
+            document.getElementById('inputText').value = '';
+            document.getElementById('resultContainer').style.display = 'none';
+        }
+        
+        function copyResult() {
+            const resultText = document.getElementById('translationResult').textContent;
+            navigator.clipboard.writeText(resultText)
+                .then(() => {
+                    const copyButton = document.querySelector('.copy-button');
+                    copyButton.innerHTML = '<i class="fas fa-check"></i> Copied!';
+                    setTimeout(() => {
+                        copyButton.innerHTML = '<i class="fas fa-copy"></i> Copy Result';
+                    }, 2000);
+                })
+                .catch(err => {
+                    console.error('Failed to copy text: ', err);
+                });
+        }
+        
+        // Function to add to translation history
+        function addToTranslateHistory(text, result) {
+            // Create history entry
+            const historyEntry = {
+                text: text,
+                result: result,
+                timestamp: new Date().toISOString()
+            };
+            
+            // Get existing history or initialize empty array
+            let history = JSON.parse(localStorage.getItem("translateHistory") || "[]");
+            
+            // Add new entry
+            history.push(historyEntry);
+            
+            // Save back to localStorage
+            localStorage.setItem("translateHistory", JSON.stringify(history));
+        }
+    </script>
+</body>
+</html> 

@@ -1,0 +1,1156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emoji Guru Pro - Your Ultimate Emoji Tool</title>
+    <!-- Add modern fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Add FontAwesome for better icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #00bcd4;
+            --primary-dark: #0097a7;
+            --secondary-color: #E91E63;
+            --text-color: #333333;
+            --light-bg: #f7f7f7;
+            --card-bg: #ffffff;
+            --success-color: #4CAF50;
+            --warning-color: #FF9800;
+            --danger-color: #FF5252;
+            --info-color: #2196F3;
+            --border-radius: 8px;
+            --box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: var(--light-bg);
+            color: var(--text-color);
+            min-height: 100vh;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-x: hidden;
+        }
+
+        .header {
+            width: 100%;
+            padding: 20px 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            border-bottom-left-radius: 20px;
+            border-bottom-right-radius: 20px;
+            margin-bottom: 30px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-icon {
+            font-size: 32px;
+            color: var(--primary-color);
+        }
+
+        h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            color: var(--primary-color);
+            font-size: 32px;
+            position: relative;
+            margin-bottom: 0;
+        }
+
+        h1::after {
+            content: "Pro";
+            position: absolute;
+            top: -5px;
+            right: -40px;
+            background-color: var(--secondary-color);
+            color: white;
+            font-size: 14px;
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+
+        .main-container {
+            width: 90%;
+            max-width: 800px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 80px;
+        }
+
+        .search-container {
+            width: 100%;
+            max-width: 500px;
+            position: relative;
+            margin: 20px 0 30px;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #aaa;
+            font-size: 18px;
+            transition: var(--transition);
+        }
+
+        input {
+            width: 100%;
+            padding: 16px 20px 16px 45px;
+            font-size: 16px;
+            font-family: 'Nunito', sans-serif;
+            border: 2px solid transparent;
+            border-radius: var(--border-radius);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+            background-color: var(--card-bg);
+            transition: var(--transition);
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 6px 15px rgba(108, 99, 255, 0.15);
+            transform: translateY(-2px);
+        }
+
+        input:focus + .search-icon {
+            color: var(--primary-color);
+        }
+
+        .emoji-btn {
+            padding: 14px 28px;
+            font-size: 16px;
+            font-weight: 600;
+            font-family: 'Montserrat', sans-serif;
+            cursor: pointer;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+            box-shadow: 0 4px 10px rgba(108, 99, 255, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .emoji-btn:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(108, 99, 255, 0.4);
+        }
+
+        .emoji-btn:active {
+            transform: translateY(-1px);
+        }
+
+        .result-card {
+            width: 100%;
+            margin-top: 30px;
+            padding: 20px;
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            transition: var(--transition);
+            min-height: 120px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .result-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background-color: var(--primary-color);
+        }
+
+        #emojiMeaning {
+            font-size: 20px;
+            color: var(--text-color);
+            transition: var(--transition);
+            animation: fadeSlideUp 0.5s ease-out;
+        }
+
+        @keyframes fadeSlideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Tools button styles */
+        .tools-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            z-index: 100;
+            transition: var(--transition);
+        }
+
+        .tools-btn:hover {
+            background-color: var(--primary-dark);
+            transform: rotate(90deg);
+        }
+
+        .tools-icon {
+            color: white;
+            font-size: 24px;
+        }
+
+        /* Settings styles */
+        .settings-btn {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            z-index: 100;
+            transition: var(--transition);
+        }
+
+        .settings-btn:hover {
+            background-color: #1976D2;
+            transform: rotate(90deg);
+        }
+
+        .settings-icon {
+            color: white;
+            font-size: 24px;
+        }
+
+        .switch-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 20px 0;
+            padding: 10px 15px;
+            background-color: rgba(0,0,0,0.03);
+            border-radius: 10px;
+        }
+
+        .switch-label {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .switch-description {
+            font-size: 14px;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        /* Switch toggle */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+            flex-shrink: 0;
+        }
+
+        .switch input { 
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--success-color);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 999;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.5);
+        }
+
+        .modal-content {
+            background-color: var(--card-bg);
+            margin: 10% auto;
+            padding: 30px;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 600px;
+            position: relative;
+        }
+
+        .modal-title {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-align: center;
+            font-size: 28px;
+            margin-bottom: 15px;
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 15px;
+        }
+
+        .tool-count {
+            position: absolute;
+            top: 15px;
+            right: 45px;
+            background-color: var(--secondary-color);
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 20px;
+        }
+
+        .close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 24px;
+            color: #666;
+            cursor: pointer;
+            opacity: 0.7;
+        }
+
+        /* Tools grid */
+        .button-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .tool-btn {
+            border-radius: 12px;
+            min-height: 110px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+            cursor: pointer;
+            border: none;
+            color: white;
+            font-weight: 600;
+        }
+
+        /* Tool-specific colors */
+        .btn-encode { background-color: #4CAF50; }
+        .btn-decode { background-color: #2196F3; }
+        .btn-qrcode { background-color: #9C27B0; }
+        .btn-mixer { background-color: #FF9800; }
+        .btn-translator { background-color: #E91E63; }
+        .btn-history { background-color: #607D8B; }
+        .btn-aiemoji { background-color: #FF5722; }
+        .btn-games { background-color: #9C27B0; }
+        .btn-detailed { background-color: #00bcd4; }
+        .btn-emojilist { background-color: #3F51B5; }
+
+        /* Emoji animation for header */
+        .emoji-float {
+            position: absolute;
+            animation: float 6s ease-in-out infinite;
+            opacity: 0.8;
+            font-size: 24px;
+            cursor: pointer;
+            transition: transform 0.2s;
+            user-select: none;
+        }
+
+        .emoji-float:hover {
+            transform: scale(1.2);
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0) rotate(0deg);
+            }
+            50% {
+                transform: translateY(-20px) rotate(10deg);
+            }
+            100% {
+                transform: translateY(0) rotate(0deg);
+            }
+        }
+
+        /* Balloon pop animation */
+        @keyframes popBalloon {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.5);
+                opacity: 0.8;
+            }
+            100% {
+                transform: scale(0);
+                opacity: 0;
+            }
+        }
+
+        /* Balloon appear animation */
+        @keyframes appearBalloon {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 0.8;
+            }
+        }
+
+        .emoji-1 { top: 20px; left: 15%; animation-delay: 0s; }
+        .emoji-2 { top: 15px; left: 85%; animation-delay: 1s; }
+        .emoji-3 { top: 60px; left: 10%; animation-delay: 2s; }
+        .emoji-4 { top: 50px; left: 90%; animation-delay: 3s; }
+
+        /* Mobile styles */
+        @media (max-width: 768px) {
+            .button-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .modal-content {
+                margin: 10% auto;
+                padding: 20px;
+                width: 95%;
+            }
+
+            .header {
+                padding: 15px 0;
+            }
+
+            h1 {
+                font-size: 26px;
+            }
+
+            h1::after {
+                right: -35px;
+                font-size: 12px;
+            }
+
+            .emoji-btn {
+                padding: 12px 24px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .button-container {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 12px;
+            }
+
+            .tool-btn {
+                min-height: 100px;
+                padding: 15px 10px;
+            }
+
+            .btn-icon {
+                font-size: 24px;
+            }
+
+            .tool-label {
+                font-size: 14px;
+            }
+
+            .main-container {
+                width: 95%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">
+            <i class="fas fa-laugh-beam logo-icon"></i>
+            <h1>Emoji Guru</h1>
+        </div>
+        <!-- Floating emojis -->
+        <span class="emoji-float emoji-1">😍</span>
+        <span class="emoji-float emoji-2">🔥</span>
+        <span class="emoji-float emoji-3">👍</span>
+        <span class="emoji-float emoji-4">❤️</span>
+    </div>
+
+    <div class="main-container">
+        <div class="search-container">
+            <input type="text" id="emojiInput" placeholder="Enter an emoji or search by keyword..." title="Enter an emoji">
+            <i class="fas fa-search search-icon"></i>
+        </div>
+        
+        <button class="emoji-btn" onclick="findMeaning()">
+            <i class="fas fa-magic"></i>
+            Find Meaning
+        </button>
+        
+        <div class="result-card">
+            <p id="emojiMeaning">Enter an emoji or keyword above to discover its meaning!</p>
+        </div>
+    </div>
+
+    <!-- Floating Tools Button -->
+    <div class="tools-btn" onclick="toggleModal()">
+        <i class="fas fa-tools tools-icon"></i>
+    </div>
+
+    <!-- Tools Modal -->
+    <div id="historyModal" class="modal">
+        <div class="modal-content">
+            <h2 class="modal-title">Emoji Tools</h2>
+            <!-- <span class="tool-count">10 tools available</span> -->
+            <span class="close" onclick="toggleModal()">×</span>
+            
+            <!-- Add settings button in the modal header -->
+            <span class="settings-btn" style="position: absolute; top: 20px; right: 45px; 
+                 background-color: var(--primary-color); width: 30px; height: 30px; 
+                 border-radius: 50%; display: flex; justify-content: center; align-items: center; 
+                 cursor: pointer; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);" onclick="toggleSettingsModal()">
+                <i class="fas fa-cog" style="color: white; font-size: 16px;"></i>
+            </span>
+            
+            <div class="button-container">
+                <button onclick="goToEncodePage()" class="tool-btn btn-encode">
+                    <span style="font-size: 24px; margin-bottom: 8px;">🔒</span>
+                    Encode
+                </button>
+                <button onclick="goToDecodePage()" class="tool-btn btn-decode">
+                    <span style="font-size: 24px; margin-bottom: 8px;">🔓</span>
+                    Decode
+                </button>
+                <button onclick="goToQRCodePage()" class="tool-btn btn-qrcode">
+                    <span style="font-size: 24px; margin-bottom: 8px;">📲</span>
+                    QR Code
+                </button>
+                <button onclick="goToEmojiMixerPage()" class="tool-btn btn-mixer">
+                    <span style="font-size: 24px; margin-bottom: 8px;">🔄</span>
+                    Emoji Mixer
+                </button>
+                <button onclick="goToTranslatePage()" class="tool-btn btn-translator">
+                    <span style="font-size: 24px; margin-bottom: 8px;">🔤</span>
+                    Translator
+                </button>
+                <button onclick="goToAIEmojiPage()" class="tool-btn btn-aiemoji">
+                    <span style="font-size: 24px; margin-bottom: 8px;">🤖</span>
+                    AI Generator
+                </button>
+                <button onclick="goToDetailedEmojiPage()" class="tool-btn btn-detailed">
+                    <span style="font-size: 24px; margin-bottom: 8px;">ℹ️</span>
+                    Detailed Info
+                </button>
+                <button onclick="goToEmojiListPage()" class="tool-btn btn-emojilist">
+                    <span style="font-size: 24px; margin-bottom: 8px;">📋</span>
+                    Emoji List
+                </button>
+                <button onclick="goToGamesPage()" class="tool-btn btn-games">
+                    <span style="font-size: 24px; margin-bottom: 8px;">🎮</span>
+                    Games
+                </button>
+                <button onclick="goToHistoryPage()" class="tool-btn btn-history">
+                    <span style="font-size: 24px; margin-bottom: 8px;">🕒</span>
+                    History
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settingsModal" class="modal">
+        <div class="modal-content">
+            <h2 class="modal-title">Settings</h2>
+            <span class="close" onclick="toggleSettingsModal()">×</span>
+            
+            <div class="switch-container">
+                <div>
+                    <div class="switch-label">AI Mode</div>
+                    <div class="switch-description">Ask AI for unknown emoji meanings or search terms</div>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" id="aiModeToggle" onchange="toggleAIMode(this.checked)">
+                    <span class="slider"></span>
+                </label>
+            </div>
+            
+            <div class="switch-container" style="margin-top: 15px;">
+                <div>
+                    <div class="switch-label">AI Provider</div>
+                    <div class="switch-description">Select which AI to use</div>
+                </div>
+                <div style="display: flex; gap: 10px;">
+                    <button id="ai1Button" class="emoji-btn" style="flex: 1; padding: 8px; white-space: nowrap; min-width: 70px;" onclick="selectAIProvider('ai1')">
+                        AI-1
+                    </button>
+                    <button id="ai2Button" class="emoji-btn" style="flex: 1; padding: 8px; background-color: #888; white-space: nowrap; min-width: 70px;" onclick="selectAIProvider('ai2')">
+                        AI-2
+                    </button>
+                </div>
+            </div>
+            
+            <button class="emoji-btn" style="width: 100%; margin-top: 20px;" onclick="saveSettings()">
+                <i class="fas fa-save"></i>
+                Save Settings
+            </button>
+        </div>
+    </div>
+
+    <script src="emoji.js"></script>
+
+    <script>
+        // Array to store emoji search history
+        var emojiHistory = [];
+        // Variable to store last emoji search
+        var lastSearch = "";
+        // Variable to store AI mode setting
+        var aiModeEnabled = false;
+        // Variable to store AI provider (ai1 = Google Gemini, ai2 = Backup API)
+        var aiProvider = "ai1";
+        
+        // List of emojis to use as replacements
+        const emojiList = [
+            "😍", "🥰", "😘", "😊", "🤩", "😎", "🥳", "😂", "🤣", 
+            "👍", "🔥", "❤️", "💯", "✨", "🎉", "🎊", "🎈", "🎁",
+            "🚀", "⭐", "🌟", "💫", "💥", "🌈", "🍀", "🎵", "🏆"
+        ];
+        
+        // Initialize emoji elements with click handlers
+        document.addEventListener('DOMContentLoaded', function() {
+            const floatingEmojis = document.querySelectorAll('.emoji-float');
+            
+            floatingEmojis.forEach(emoji => {
+                emoji.addEventListener('click', handleEmojiPop);
+            });
+            
+            // Initialize settings
+            initSettings();
+        });
+        
+        // Function to handle emoji pop effect
+        function handleEmojiPop(event) {
+            const emoji = event.target;
+            
+            // Play popping sound (optional)
+            const popSound = new Audio('data:audio/mp3;base64,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');
+            popSound.volume = 0.3;
+            popSound.play().catch(e => console.log("Can't play sound"));
+            
+            // Add pop animation
+            emoji.style.animation = 'popBalloon 0.5s forwards';
+            
+            // After pop animation ends, replace with new emoji
+            setTimeout(() => {
+                // Remove popped emoji
+                const randomEmoji = getRandomEmoji();
+                emoji.textContent = randomEmoji;
+                emoji.style.animation = 'appearBalloon 0.5s forwards, float 6s ease-in-out infinite';
+            }, 500);
+        }
+        
+        // Function to get random emoji from list
+        function getRandomEmoji() {
+            return emojiList[Math.floor(Math.random() * emojiList.length)];
+        }
+
+        // Function to handle opening and closing modal
+        function toggleModal() {
+            var modal = document.getElementById('historyModal');
+            if (modal.style.display === "block") {
+                modal.style.opacity = "0";
+                setTimeout(function() {
+                    modal.style.display = "none";
+                    modal.style.opacity = "1";
+                }, 300);
+            } else {
+                modal.style.display = "block";
+                updateHistory();
+            }
+        }
+
+        // Close modal if user clicks outside of it
+        window.onclick = function(event) {
+            var modal = document.getElementById('historyModal');
+            if (event.target == modal) {
+                toggleModal();
+            }
+        }
+
+        // Function to update history when modal opens
+        function updateHistory() {
+            // We don't need to show history in the modal anymore
+            // Just keep track of it in localStorage for the separate history page
+        }
+
+        // Function to find meaning of emoji or matching emojis
+        function findMeaning() {
+            var userInput = document.getElementById('emojiInput').value.trim(); // Trim whitespace
+            var emojiMeaning = document.getElementById('emojiMeaning');
+            var resultCard = document.querySelector('.result-card');
+
+            // Add animation by removing and adding the element
+            resultCard.style.opacity = "0";
+            
+            setTimeout(function() {
+                // Check if the input is empty
+                if (userInput === "") {
+                    emojiMeaning.innerHTML = '<i class="fas fa-exclamation-circle" style="color: #FF5252;"></i> Please enter an emoji or text to search.';
+                    emojiMeaning.style.color = "#FF5252"; // Change color for no input
+                    resultCard.style.boxShadow = "0 5px 15px rgba(255, 82, 82, 0.2)";
+                    resultCard.style.opacity = "1";
+                    return; // Exit the function if input is empty
+                }
+
+                // Check if the input is an emoji
+                if (isEmoji(userInput)) {
+                    handleEmojiSearch(userInput);
+                } else {
+                    handleTextSearch(userInput);
+                }
+
+                resultCard.style.opacity = "1";
+            }, 200);
+        }
+
+        // Function to handle emoji search
+        function handleEmojiSearch(emoji) {
+            var emojiMeaning = document.getElementById('emojiMeaning');
+            var resultCard = document.querySelector('.result-card');
+            
+            if (emojiDictionary[emoji]) {
+                emojiMeaning.innerHTML = '<span style="font-size: 2rem; margin-right: 10px;">' + emoji + '</span> means: <strong>' + emojiDictionary[emoji] + '</strong>';
+                emojiMeaning.style.color = "var(--text-color)"; // Default text color
+                resultCard.style.boxShadow = "0 8px 20px rgba(108, 99, 255, 0.15)";
+                resultCard.style.borderLeft = "4px solid var(--primary-color)";
+                addToHistory(emoji); // Add emoji to history array
+            } else if (aiModeEnabled) {
+                // Show loading state
+                emojiMeaning.innerHTML = '<i class="fas fa-spinner fa-spin" style="color: var(--primary-color); margin-right: 10px;"></i> Asking AI about <span style="font-size: 1.5rem;">' + emoji + '</span>...';
+                emojiMeaning.style.color = "var(--text-color)";
+                resultCard.style.boxShadow = "0 8px 20px rgba(108, 99, 255, 0.15)";
+                resultCard.style.borderLeft = "4px solid var(--primary-color)";
+                
+                // Ask AI for the meaning
+                queryGeminiAPI("What does the emoji " + emoji + " mean? Provide only a single short sentence answer without any additional context or list.")
+                    .then(response => {
+                        // Make sure the response is just one line
+                        const singleLineResponse = response.split('.')[0] + '.';
+                        emojiMeaning.innerHTML = '<span style="font-size: 2rem; margin-right: 10px;">' + emoji + '</span> <strong>AI says:</strong> ' + singleLineResponse;
+                        addToHistory(emoji); // Add emoji to history array
+                    })
+                    .catch(error => {
+                        emojiMeaning.innerHTML = '<i class="fas fa-exclamation-circle" style="color: #FF9800; margin-right: 10px;"></i> Sorry, I couldn\'t find the meaning of <span style="font-size: 1.5rem;">' + emoji + '</span>.';
+                        resultCard.style.boxShadow = "0 8px 20px rgba(255, 152, 0, 0.15)";
+                        resultCard.style.borderLeft = "4px solid #FF9800";
+                    });
+            } else {
+                // AI mode is disabled, show message to enable it
+                emojiMeaning.innerHTML = '<i class="fas fa-info-circle" style="color: #2196F3; margin-right: 10px;"></i> The meaning of <span style="font-size: 1.5rem;">' + emoji + '</span> is not in our database. <button onclick="enableAIAndSearch(\'' + emoji + '\')" class="emoji-btn" style="margin-left: 10px; padding: 5px 10px; font-size: 14px;"><i class="fas fa-robot"></i> Ask AI</button>';
+                emojiMeaning.style.color = "var(--text-color)";
+                resultCard.style.boxShadow = "0 8px 20px rgba(33, 150, 243, 0.15)";
+                resultCard.style.borderLeft = "4px solid #2196F3";
+                addToHistory(emoji);
+            }
+        }
+
+        // Function to handle text search
+        function handleTextSearch(text) {
+            var emojiMeaning = document.getElementById('emojiMeaning');
+            var resultCard = document.querySelector('.result-card');
+            var matchedEmojis = [];
+            var matched = false;
+            
+            for (var emoji in emojiDictionary) {
+                if (emojiDictionary[emoji].toLowerCase().includes(text.toLowerCase())) {
+                    matchedEmojis.push('<div style="display: inline-block; margin: 5px; padding: 8px 15px; background-color: rgba(108, 99, 255, 0.1); border-radius: 8px;"><span style="font-size: 1.5rem; margin-right: 8px;">' + emoji + '</span> ' + emojiDictionary[emoji] + '</div>');
+                    matched = true;
+                }
+            }
+            
+            if (matched) {
+                emojiMeaning.innerHTML = '<div style="margin-bottom: 15px;"><i class="fas fa-search" style="color: var(--primary-color); margin-right: 10px;"></i> Matching emojis for <strong>"' + text + '"</strong>:</div><div style="display: flex; flex-wrap: wrap; gap: 5px;">' + matchedEmojis.join('') + '</div>';
+                emojiMeaning.style.color = "var(--text-color)"; // Default text color
+                resultCard.style.boxShadow = "0 8px 20px rgba(108, 99, 255, 0.15)";
+                resultCard.style.borderLeft = "4px solid var(--primary-color)";
+            } else if (aiModeEnabled) {
+                // Show loading state
+                emojiMeaning.innerHTML = '<i class="fas fa-spinner fa-spin" style="color: var(--primary-color); margin-right: 10px;"></i> Searching AI for <strong>"' + text + '"</strong>...';
+                emojiMeaning.style.color = "var(--text-color)";
+                resultCard.style.boxShadow = "0 8px 20px rgba(108, 99, 255, 0.15)";
+                resultCard.style.borderLeft = "4px solid var(--primary-color)";
+                
+                // Ask AI for relevant emojis
+                queryGeminiAPI("What is the main emoji related to '" + text + "'? Give just one emoji and a short explanation in a single sentence.")
+                    .then(response => {
+                        // Make sure the response is concise
+                        const conciseResponse = response.split('\n')[0];
+                        emojiMeaning.innerHTML = '<div style="margin-bottom: 15px;"><i class="fas fa-robot" style="color: var(--primary-color); margin-right: 10px;"></i> AI results for <strong>"' + text + '"</strong>:</div><div style="background-color: rgba(108, 99, 255, 0.05); border-radius: 8px; padding: 12px;">' + conciseResponse + '</div>';
+                        addToHistory(text);
+                    })
+                    .catch(error => {
+                        emojiMeaning.innerHTML = '<i class="fas fa-search-minus" style="color: #FF5252; margin-right: 10px;"></i> No matching emojis found for <strong>"' + text + '"</strong>.';
+                        resultCard.style.boxShadow = "0 8px 20px rgba(255, 82, 82, 0.15)";
+                        resultCard.style.borderLeft = "4px solid #FF5252";
+                    });
+            } else {
+                // AI mode is disabled, show message to enable it
+                emojiMeaning.innerHTML = '<i class="fas fa-info-circle" style="color: #2196F3; margin-right: 10px;"></i> No emojis found for <strong>"' + text + '"</strong> in our database. <button onclick="enableAIAndSearch(\'' + text + '\')" class="emoji-btn" style="margin-left: 10px; padding: 5px 10px; font-size: 14px;"><i class="fas fa-robot"></i> Ask AI</button>';
+                emojiMeaning.style.color = "var(--text-color)";
+                resultCard.style.boxShadow = "0 8px 20px rgba(33, 150, 243, 0.15)";
+                resultCard.style.borderLeft = "4px solid #2196F3";
+                addToHistory(text);
+            }
+            
+            addToHistory(text); // Add text to history array regardless of search result
+        }
+
+        // Function to query Gemini API
+        async function queryGeminiAPI(prompt) {
+            // Check which AI provider to use
+            if (aiProvider === "ai1") {
+                return queryGeminiAI(prompt);
+            } else {
+                return queryBackupAI(prompt);
+            }
+        }
+        
+        // Function to query Google Gemini API
+        async function queryGeminiAI(prompt) {
+            const API_KEY = "AIzaSyCh-T5vR2o8oDUn0T2tTA2cXMe0WNXEaf0";
+            const API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=" + API_KEY;
+            
+            try {
+                const response = await fetch(API_URL, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        contents: [{
+                            parts: [{ text: prompt }]
+                        }]
+                    })
+                });
+                
+                if (!response.ok) {
+                    throw new Error("API request failed");
+                }
+                
+                const data = await response.json();
+                
+                // Extract the text from the response
+                if (data.candidates && 
+                    data.candidates[0] && 
+                    data.candidates[0].content && 
+                    data.candidates[0].content.parts && 
+                    data.candidates[0].content.parts[0]) {
+                    return data.candidates[0].content.parts[0].text;
+                } else {
+                    throw new Error("Unexpected API response format");
+                }
+            } catch (error) {
+                console.error("Error querying Gemini API:", error);
+                throw error;
+            }
+        }
+        
+        // Function to query Backup AI API
+        async function queryBackupAI(prompt) {
+            try {
+                const response = await fetch("https://backend.buildpicoapps.com/aero/run/llm-api?pk=v1-Z0FBQUFBQm5IZkJDMlNyYUVUTjIyZVN3UWFNX3BFTU85SWpCM2NUMUk3T2dxejhLSzBhNWNMMXNzZlp3c09BSTR6YW1Sc1BmdGNTVk1GY0liT1RoWDZZX1lNZlZ0Z1dqd3c9PQ==", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        prompt: prompt
+                    })
+                });
+                
+                if (!response.ok) {
+                    throw new Error("Backup API request failed");
+                }
+                
+                const data = await response.json();
+                return data.response || data.text || "No response from backup API";
+            } catch (error) {
+                console.error("Error querying Backup API:", error);
+                throw error;
+            }
+        }
+
+        // Function to add to search history
+        function addToHistory(input) {
+            // Create history entry with timestamp
+            const historyEntry = {
+                text: input,
+                timestamp: new Date().toISOString()
+            };
+            
+            // Get existing history or initialize empty array
+            let history = JSON.parse(localStorage.getItem("emojiHistory") || "[]");
+            
+            // If history is a simple array of strings, convert it to objects with timestamps
+            if (history.length > 0 && typeof history[0] === 'string') {
+                history = history.map(item => ({
+                    text: item,
+                    timestamp: new Date().toISOString()
+                }));
+            }
+            
+            // Add new entry
+            history.push(historyEntry);
+            
+            // Save back to localStorage
+            localStorage.setItem("emojiHistory", JSON.stringify(history));
+            
+            // Update display
+            lastSearch = input;
+            updateHistory();
+        }
+
+        // Function to check if a string contains emoji characters
+        function isEmoji(input) {
+            var emojiPattern = /[\uD800-\uDBFF][\uDC00-\uDFFF]/;
+            return emojiPattern.test(input);
+        }
+
+        // Function to restore last search when modal is reopened
+        function restoreLastSearch() {
+            if (lastSearch) {
+                document.getElementById('emojiInput').value = lastSearch; // Set input value to last search
+            }
+        }
+
+        // Restore last search and update history when page is loaded
+        window.onload = function() {
+            restoreLastSearch();
+            updateHistory();
+        };
+
+        // Add enter key support for search
+        document.getElementById('emojiInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                findMeaning();
+            }
+        });
+
+        // Function to handle going to encode.html
+        function goToEncodePage() {
+            window.location.href = "encode.html";
+        }
+
+        // Function to handle going to decode.html
+        function goToDecodePage() {
+            window.location.href = "decode.html";
+        }
+
+        // Function to handle going to QR code page
+        function goToQRCodePage() {
+            window.location.href = "qrcode.html";
+        }
+
+        // Function to handle going to emoji mixer page
+        function goToEmojiMixerPage() {
+            window.location.href = "emojimixer.html";
+        }
+
+        // Function to handle going to translate.html
+        function goToTranslatePage() {
+            window.location.href = "translate.html";
+        }
+
+        // Function to handle going to AI Emoji Generator page
+        function goToAIEmojiPage() {
+            window.location.href = "aiemoji.html";
+        }
+        
+        // Function to handle going to Emoji Games page
+        function goToGamesPage() {
+            window.location.href = "games/index.html";
+        }
+        
+        // Function to handle going to history.html
+        function goToHistoryPage() {
+            window.location.href = "history.html";
+        }
+
+        // Function to handle going to detailed emoji page
+        function goToDetailedEmojiPage() {
+            window.location.href = "detailedemoji.html";
+        }
+
+        // Function to handle going to emoji list page
+        function goToEmojiListPage() {
+            window.location.href = "emojilist.html";
+        }
+
+        // Function to initialize settings
+        function initSettings() {
+            // Load AI mode setting from localStorage
+            aiModeEnabled = localStorage.getItem("aiModeEnabled") === "true";
+            
+            // Load AI provider setting from localStorage (default to ai1 if not set)
+            aiProvider = localStorage.getItem("aiProvider") || "ai1";
+            
+            // Update toggle in settings modal
+            document.getElementById('aiModeToggle').checked = aiModeEnabled;
+            
+            // Update AI provider buttons
+            updateAIProviderButtons();
+        }
+        
+        // Function to update AI provider buttons
+        function updateAIProviderButtons() {
+            const ai1Button = document.getElementById('ai1Button');
+            const ai2Button = document.getElementById('ai2Button');
+            
+            if (aiProvider === "ai1") {
+                ai1Button.style.backgroundColor = "var(--primary-color)";
+                ai2Button.style.backgroundColor = "#888";
+            } else {
+                ai1Button.style.backgroundColor = "#888";
+                ai2Button.style.backgroundColor = "var(--primary-color)";
+            }
+        }
+        
+        // Function to select AI provider
+        function selectAIProvider(provider) {
+            aiProvider = provider;
+            updateAIProviderButtons();
+        }
+        
+        // Function to toggle AI mode
+        function toggleAIMode(enabled) {
+            aiModeEnabled = enabled;
+        }
+        
+        // Function to save settings
+        function saveSettings() {
+            localStorage.setItem("aiModeEnabled", aiModeEnabled);
+            localStorage.setItem("aiProvider", aiProvider);
+            toggleSettingsModal();
+            
+            // Show confirmation message
+            const emojiMeaning = document.getElementById('emojiMeaning');
+            const resultCard = document.querySelector('.result-card');
+            
+            const providerName = aiProvider === "ai1" ? "Emoji AI" : "Backup AI";
+            emojiMeaning.innerHTML = '<i class="fas fa-check-circle" style="color: var(--success-color); margin-right: 10px;"></i> Settings saved! AI mode is now <strong>' + (aiModeEnabled ? 'enabled' : 'disabled') + '</strong>. Using <strong>' + providerName + '</strong>.';
+            emojiMeaning.style.color = "var(--text-color)";
+            resultCard.style.boxShadow = "0 8px 20px rgba(76, 175, 80, 0.15)";
+            resultCard.style.borderLeft = "4px solid var(--success-color)";
+        }
+        
+        // Function to toggle settings modal
+        function toggleSettingsModal() {
+            var modal = document.getElementById('settingsModal');
+            if (modal.style.display === "block") {
+                modal.style.opacity = "0";
+                setTimeout(function() {
+                    modal.style.display = "none";
+                    modal.style.opacity = "1";
+                }, 300);
+            } else {
+                modal.style.display = "block";
+                document.getElementById('aiModeToggle').checked = aiModeEnabled;
+            }
+        }
+
+        // Close settings modal if user clicks outside of it
+        window.addEventListener('click', function(event) {
+            var settingsModal = document.getElementById('settingsModal');
+            if (event.target == settingsModal) {
+                toggleSettingsModal();
+            }
+        });
+
+        // Function to enable AI mode and search again
+        function enableAIAndSearch(query) {
+            // Enable AI mode
+            aiModeEnabled = true;
+            document.getElementById('aiModeToggle').checked = true;
+            localStorage.setItem("aiModeEnabled", "true");
+            
+            // Search again with the same query
+            document.getElementById('emojiInput').value = query;
+            findMeaning();
+        }
+    </script>
+</body>
+</html>
